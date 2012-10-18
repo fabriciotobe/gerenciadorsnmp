@@ -52,187 +52,375 @@
 <span class="c">#!/usr/bin/env python</span>
 <span class="c">#coding: utf-8</span>
 
-<span class="c"># AUTOR: Fabricio Kelmer</span>
-<span class="c"># CONTATO: fabriciotobe@gmail.com</span>
-<span class="c"># DATA: 16 de Outubro de 2012</span>
+<span class="c"># @autor: Fabricio Kelmer</span>
+<span class="c"># @contato: fabriciotobe@gmail.com</span>
+<span class="c"># @data: 16 de Outubro de 2012</span>
 
-<span class="c">#Se o dbquery for chamado diretamente, ele gera a lista dos Hosts cadastrados no Banco de Dados e suas informacoes basicas e exibe em um arquivo de texto.</span>
+<span class="c"># dbquery gera os relatorios em formato TXT e CSV.</span>
+<span class="c"># Se o dbquery for chamado diretamente, ele gera a lista dos Hosts cadastrados no Banco de Dados e suas informacoes basicas e exibe em um arquivo de texto.</span>
 
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">from</span> <span class="nn">logs</span> <span class="kn">import</span> <span class="n">logdbquery</span>
 <span class="kn">import</span> <span class="nn">dbmanager</span>
 <span class="kn">from</span> <span class="nn">settings</span> <span class="kn">import</span> <span class="n">DB</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">,</span> <span class="n">INSTALL_PATH</span>
 
+
 <div class="viewcode-block" id="hostlist_txt"><a class="viewcode-back" href="../codigo.html#dbquery.hostlist_txt">[docs]</a><span class="k">def</span> <span class="nf">hostlist_txt</span><span class="p">(</span><span class="n">idx</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Gera a lista de Hosts e exibe o resultado em arquivo de texto. &#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39; Gera a lista de Hosts e formata o resultado para ser inserido em um arquivo de texto.</span>
+<span class="sd">        idx contem o indice do host, caso nao for fornecido sera retornado todos os hosts cadastrados.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+    <span class="c"># Gera uma lista de tuplas com o(s) host(s) desejado(s).</span>
     <span class="n">l</span> <span class="o">=</span> <span class="n">dbmanager</span><span class="o">.</span><span class="n">query_hosts_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">),</span> <span class="n">idx</span><span class="p">)</span>
+
+    <span class="c"># Verifica ha host para o relatorio</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
+
+            <span class="c"># Cria o arquivo do relatorio no formato TXT</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;{0}{1}hostslists.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">),</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">arq</span><span class="p">:</span>
+
+                <span class="c"># Passa host a host inserindo os dados no arquivo.</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
+                    <span class="c"># Com cada host e gerada uma lista dos dados</span>
                     <span class="n">lg1</span> <span class="o">=</span> <span class="n">dbmanager</span><span class="o">.</span><span class="n">query_group1_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">),</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+                    <span class="c"># Escreve no arquivo</span>
                     <span class="n">arq</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;ID: {0}</span><span class="se">\n</span><span class="s">IP: {1}</span><span class="se">\n</span><span class="s">HOST: {2}</span><span class="se">\n</span><span class="s">DESCRICAO: {3}</span><span class="se">\n</span><span class="s">LIGADO: {4}</span><span class="se">\n</span><span class="s">CONTATO: {5}</span><span class="se">\n</span><span class="s">LOCAL: {6}</span><span class="se">\n</span><span class="s">NUM. SERVICOS: {7}</span><span class="se">\n</span><span class="s">DATA: {8}</span><span class="se">\n</span><span class="s">HORA: {9}</span><span class="se">\n\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">lg1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lg1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">lg1</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">lg1</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">lg1</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">lg1</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">lg1</span><span class="p">[</span><span class="mi">6</span><span class="p">]))</span>
+
+            <span class="c"># Abre o gedit com o relatorio criado</span>
             <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s">&#39;gedit&#39;</span><span class="p">,</span> <span class="s">&#39;{0}{1}hostslists.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">)])</span>
+
+            <span class="c"># Insere sucesso no log</span>
             <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;SUCESSO ao criar o arquivo {0}{1}hostslists.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">))</span>
         <span class="k">except</span><span class="p">:</span>
+            <span class="c"># Insere falha no log</span>
             <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;FALHA ao criar o arquivo {0}{1}hostslists.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">))</span>
             <span class="k">print</span> <span class="s">&#39;Falha ao criar o arquivo.&#39;</span>
     <span class="k">else</span><span class="p">:</span>
+        <span class="c"># Insere falha no log se nao houver nenhum host para gerar o relatorio</span>
         <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;FALHA, Nenhum Host encontrado ao gerar {0}{1}hostslists.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Nenhum Host encontrado.&#39;</span>
-        </div>
+
+</div>
 <div class="viewcode-block" id="hostlist_csv"><a class="viewcode-back" href="../codigo.html#dbquery.hostlist_csv">[docs]</a><span class="k">def</span> <span class="nf">hostlist_csv</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Gera a lista de Hosts e exibe o resultado em arquivo separado por virgulas (CSV). &#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39; Gera a lista de Hosts e exibe o resultado em arquivo separado por virgulas (CSV).</span>
+<span class="sd">        dest contem o diretorio fornecido para salvar o relatorio. Tem que fornecer o caminho absoluto.</span>
+<span class="sd">        nome contem o nome do arquivo que sera criado.</span>
+<span class="sd">        idx contem o indice do host, caso nao for fornecido sera retornado todos os hosts cadastrados.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+    <span class="c"># Gera uma lista de tuplas com o(s) host(s) desejado(s).</span>
     <span class="n">l</span> <span class="o">=</span> <span class="n">dbmanager</span><span class="o">.</span><span class="n">query_hosts_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">),</span> <span class="n">idx</span><span class="p">)</span>
+
+    <span class="c"># Verifica ha host para o relatorio</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
+            <span class="c"># Cria o arquivo do relatorio no formato CSV</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;{0}{1}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">),</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">arq</span><span class="p">:</span>
+
+                <span class="c"># Escreve no arquivo os titulos das colunas</span>
                 <span class="n">arq</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;&quot;ID&quot;;&quot;IP&quot;;&quot;HOST&quot;;&quot;DESCRICAO&quot;;&quot;LIGADO&quot;;&quot;CONTATO&quot;;&quot;LOCAL&quot;;&quot;NUM. SERVICOS&quot;;&quot;DATA&quot;;&quot;HORA&quot;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+
+                <span class="c"># Passa host a host inserindo os dados no arquivo.</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
+                    <span class="c"># Com cada host e gerada uma lista dos dados</span>
                     <span class="n">lg1</span> <span class="o">=</span> <span class="n">dbmanager</span><span class="o">.</span><span class="n">query_group1_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">),</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+                    <span class="c"># Escreve no arquivo</span>
                     <span class="n">arq</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;&quot;{0}&quot;;&quot;{1}&quot;;&quot;{2}&quot;;&quot;{3}&quot;;&quot;{4}&quot;;&quot;{5}&quot;;&quot;{6}&quot;;&quot;{7}&quot;;&quot;{8}&quot;;&quot;{9}&quot;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">lg1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lg1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">lg1</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">lg1</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">lg1</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">lg1</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">lg1</span><span class="p">[</span><span class="mi">6</span><span class="p">]))</span>
+
+            <span class="c"># Chama o gedit para exibir o arquivo</span>
             <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s">&#39;gedit&#39;</span><span class="p">,</span> <span class="s">&#39;{0}{1}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">)])</span>
+
+            <span class="c"># Insere sucesso no log</span>
             <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;SUCESSO ao criar o arquivo {0}{1}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">))</span>
         <span class="k">except</span><span class="p">:</span>
+
+            <span class="c"># Insere falha no log</span>
             <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;FALHA ao criar o arquivo {0}{1}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">))</span>
             <span class="k">print</span> <span class="s">&#39;Falha ao criar o arquivo.&#39;</span>
     <span class="k">else</span><span class="p">:</span>
+        <span class="c"># Insere falha no log se nao houver hosts para gerar o relatorio</span>
         <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;FALHA, Nenhum Host encontrado ao gerar {0}{1}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Nenhum Host encontrado.&#39;</span>
+
 </div>
 <div class="viewcode-block" id="sysusers_process_txt"><a class="viewcode-back" href="../codigo.html#dbquery.sysusers_process_txt">[docs]</a><span class="k">def</span> <span class="nf">sysusers_process_txt</span><span class="p">(</span><span class="n">idx</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Gera a lista da quantidade de usuarios logados e quantidade de processos do Host ordenado por data e hora e exibe o resultado em arquivo de texto. &#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39; Gera a lista da quantidade de usuarios logados e quantidade de processos do Host ordenado por data e hora e exibe o resultado em arquivo de texto.</span>
+<span class="sd">        idx contem o indice do host, caso nao for fornecido sera retornado todos os hosts cadastrados.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+    <span class="c"># Gera uma lista de tuplas com o(s) host(s) desejado(s).</span>
     <span class="n">l</span> <span class="o">=</span> <span class="n">dbmanager</span><span class="o">.</span><span class="n">query_hosts_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">),</span> <span class="n">idx</span><span class="p">)</span>
+
+    <span class="c"># Verifica ha host para o relatorio</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
+            <span class="c"># Cria o arquivo do relatorio no formato TXT</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;{0}{1}sysusers_process.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">),</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">arq</span><span class="p">:</span>
+
+                <span class="c"># Escreve no arquivo os titulos das colunas</span>
                 <span class="n">arq</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;ID</span><span class="se">\t\t</span><span class="s">IP</span><span class="se">\t\t</span><span class="s">HOST</span><span class="se">\t\t</span><span class="s">USUARIO LOGADOS</span><span class="se">\t\t</span><span class="s">PROCESSOS</span><span class="se">\t\t</span><span class="s">DATA</span><span class="se">\t\t</span><span class="s">HORA</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+
+                <span class="c"># Passa host a host inserindo os dados no arquivo.</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
+                    <span class="c"># Com cada host e gerada uma lista dos dados</span>
                     <span class="n">lg2</span> <span class="o">=</span> <span class="n">dbmanager</span><span class="o">.</span><span class="n">query_group2_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">),</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+                    <span class="c"># Para cada dados da lista, escreve no arquivo</span>
                     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">lg2</span><span class="p">:</span>
                         <span class="n">arq</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;{0}</span><span class="se">\t\t</span><span class="s">{1}</span><span class="se">\t\t</span><span class="s">{2}</span><span class="se">\t\t</span><span class="s">{3}</span><span class="se">\t\t</span><span class="s">{4}</span><span class="se">\t\t</span><span class="s">{5}</span><span class="se">\t\t</span><span class="s">{6}</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">j</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">j</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">j</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">j</span><span class="p">[</span><span class="mi">5</span><span class="p">]))</span>
+
+            <span class="c"># Chama o gedit para exibir o arquivo</span>
             <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s">&#39;gedit&#39;</span><span class="p">,</span> <span class="s">&#39;{0}{1}sysusers_process.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">)])</span>
+
+            <span class="c"># Insere sucesso no log</span>
             <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;SUCESSO ao criar o arquivo {0}{1}sysusers_process.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">))</span>
         <span class="k">except</span><span class="p">:</span>
+            <span class="c"># Insere falha no log</span>
             <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;FALHA, Nenhum Host encontrado ao gerar {0}{1}sysusers_process.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">))</span>
             <span class="k">print</span> <span class="s">&#39;Falha ao criar o arquivo.&#39;</span>
     <span class="k">else</span><span class="p">:</span>
+        <span class="c"># Insere falha no log se nao houver hosts para gerar relatorio</span>
         <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;FALHA, Nenhum Host encontrado ao gerar {0}{1}hostslists.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Nenhum Host encontrado.&#39;</span>
+
 </div>
 <div class="viewcode-block" id="sysusers_process_csv"><a class="viewcode-back" href="../codigo.html#dbquery.sysusers_process_csv">[docs]</a><span class="k">def</span> <span class="nf">sysusers_process_csv</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Gera a lista da quantidade de usuarios logados e quantidade de processos do Host ordenado por data e hora e exibe o resultado em arquivo separado por virgulas (CSV). &#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39; Gera a lista da quantidade de usuarios logados e quantidade de processos do Host ordenado por data e hora e exibe o resultado em arquivo separado por virgulas (CSV).</span>
+<span class="sd">        dest contem o diretorio fornecido para salvar o relatorio. Tem que fornecer o caminho absoluto.</span>
+<span class="sd">        nome contem o nome do arquivo que sera criado.</span>
+<span class="sd">        idx contem o indice do host, caso nao for fornecido sera retornado todos os hosts cadastrados.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+    <span class="c"># Gera uma lista de tuplas com o(s) host(s) desejado(s).</span>
     <span class="n">l</span> <span class="o">=</span> <span class="n">dbmanager</span><span class="o">.</span><span class="n">query_hosts_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">),</span> <span class="n">idx</span><span class="p">)</span>
+
+    <span class="c"># Verifica ha host para o relatorio</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
+            <span class="c"># Cria o arquivo do relatorio no formato CSV</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;{0}{1}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">),</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">arq</span><span class="p">:</span>
+
+                <span class="c"># Escreve no arquivo os titulos das colunas</span>
                 <span class="n">arq</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;&quot;ID&quot;;&quot;IP&quot;;&quot;HOST&quot;;&quot;USUARIO LOGADOS&quot;;&quot;PROCESSOS&quot;;&quot;DATA&quot;;&quot;HORA&quot;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+
+                <span class="c"># Passa host a host inserindo os dados no arquivo.</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
+                    <span class="c"># Com cada host e gerada uma lista dos dados</span>
                     <span class="n">lg2</span> <span class="o">=</span> <span class="n">dbmanager</span><span class="o">.</span><span class="n">query_group2_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">),</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+                    <span class="c"># Para cada dados da lista, escreve no arquivo</span>
                     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">lg2</span><span class="p">:</span>
                         <span class="n">arq</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;&quot;{0}&quot;;&quot;{1}&quot;;&quot;{2}&quot;;&quot;{3}&quot;;&quot;{4}&quot;;&quot;{5}&quot;;&quot;{6}&quot;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">j</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">j</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">j</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">j</span><span class="p">[</span><span class="mi">5</span><span class="p">]))</span>
+
+            <span class="c"># Chama o gedit para exibir o relatorio</span>
             <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s">&#39;gedit&#39;</span><span class="p">,</span> <span class="s">&#39;{0}{1}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">)])</span>
+
+            <span class="c"># Insere sucesso no log</span>
             <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;SUCESSO ao criar o arquivo {0}{1}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">))</span>
         <span class="k">except</span><span class="p">:</span>
+
+            <span class="c"># Insere falha no log</span>
             <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;FALHA ao criar o arquivo {0}{1}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">))</span>
             <span class="k">print</span> <span class="s">&#39;Falha ao criar o arquivo.&#39;</span>
     <span class="k">else</span><span class="p">:</span>
+        <span class="c"># Insere falha no log se nao houver hosts para gerar o relatorio</span>
         <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;FALHA, Nenhum Host encontrado ao gerar {0}{1}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Nenhum Host encontrado.&#39;</span>
+
 </div>
 <div class="viewcode-block" id="memory_storage_txt"><a class="viewcode-back" href="../codigo.html#dbquery.memory_storage_txt">[docs]</a><span class="k">def</span> <span class="nf">memory_storage_txt</span><span class="p">(</span><span class="n">idx</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Gera a lista com a Memoria e unidades de armazenamento cadastrados no Host com seu tamanho total e usado e exibe o resultado em arquivo de texto. &#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39; Gera a lista com a Memoria e unidades de armazenamento cadastrados no Host com seu tamanho total e usado e exibe o resultado em arquivo de texto.</span>
+<span class="sd">        idx contem o indice do host, caso nao for fornecido sera retornado todos os hosts cadastrados.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+    <span class="c"># Gera uma lista de tuplas com o(s) host(s) desejado(s).</span>
     <span class="n">l</span> <span class="o">=</span> <span class="n">dbmanager</span><span class="o">.</span><span class="n">query_hosts_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">),</span> <span class="n">idx</span><span class="p">)</span>
+
+    <span class="c"># Verifica ha host para o relatorio</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span> <span class="p">(</span><span class="s">&#39;{0}{1}memory_storage.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">),</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">arq</span><span class="p">:</span>
+            <span class="c"># Cria o arquivo do relatorio no formato TXT</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;{0}{1}memory_storage.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">),</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">arq</span><span class="p">:</span>
+
+                <span class="c"># Passa host a host inserindo os dados no arquivo.</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
+
+                    <span class="c"># Passa host a host inserindo os dados no arquivo.</span>
                     <span class="n">lg3</span> <span class="o">=</span> <span class="n">dbmanager</span><span class="o">.</span><span class="n">query_group3_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">),</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+                    <span class="c"># Para cada dados da lista, escreve no arquivo</span>
                     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">lg3</span><span class="p">:</span>
+                        <span class="c"># Insere as colunas no arquivo</span>
                         <span class="n">arq</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;DATA: {0}</span><span class="se">\t\t</span><span class="s">HORA: {1}</span><span class="se">\n</span><span class="s">MEMORIA: {2}MB</span><span class="se">\n</span><span class="s">ID</span><span class="se">\t\t</span><span class="s">IP</span><span class="se">\t\t</span><span class="s">UNIDADE</span><span class="se">\t\t</span><span class="s">TAMANHO TOTAL</span><span class="se">\t\t</span><span class="s">TAMANHO USADO</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">j</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">j</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+
+                        <span class="c"># Remove o separador e separa cada valor para uma variavel para ser escrito no arquivo</span>
                         <span class="n">hrSD</span> <span class="o">=</span> <span class="n">j</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;|&#39;</span><span class="p">)</span>
                         <span class="n">hrSS</span> <span class="o">=</span> <span class="n">j</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;|&#39;</span><span class="p">)</span>
                         <span class="n">hrSU</span> <span class="o">=</span> <span class="n">j</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;|&#39;</span><span class="p">)</span>
+
+                        <span class="c"># Escreve o dados no arquivo</span>
                         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">hrSD</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
                             <span class="n">arq</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;{0}</span><span class="se">\t\t</span><span class="s">{1}</span><span class="se">\t\t</span><span class="s">{2}</span><span class="se">\t\t</span><span class="s">{3}MB</span><span class="se">\t\t</span><span class="s">{4}MB</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">hrSD</span><span class="p">[</span><span class="n">a</span><span class="p">],</span> <span class="n">hrSS</span><span class="p">[</span><span class="n">a</span><span class="p">],</span> <span class="n">hrSU</span><span class="p">[</span><span class="n">a</span><span class="p">]))</span>
                         <span class="n">arq</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+
+            <span class="c"># Chama o gedit para exibir o relatorio</span>
             <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s">&#39;gedit&#39;</span><span class="p">,</span> <span class="s">&#39;{0}{1}memory_storage.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">)])</span>
+
+            <span class="c"># Insere sucesso no log</span>
             <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;SUCESSO ao criar o arquivo {0}{1}memory_storage.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">))</span>
         <span class="k">except</span><span class="p">:</span>
+            <span class="c"># Insere falha no log</span>
             <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;FALHA, Nenhum Host encontrado ao gerar {0}{1}sysusers_process.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">))</span>
             <span class="k">print</span> <span class="s">&#39;Falha ao criar arquivo.&#39;</span>
     <span class="k">else</span><span class="p">:</span>
+        <span class="c"># Insere falha no log se nao houver hosts para gerar o relatorio</span>
         <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;FALHA, Nenhum Host encontrado ao gerar {0}{1}hostslists.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Nenhum Host encontrado.&#39;</span>
+
 </div>
 <div class="viewcode-block" id="memory_storage_csv"><a class="viewcode-back" href="../codigo.html#dbquery.memory_storage_csv">[docs]</a><span class="k">def</span> <span class="nf">memory_storage_csv</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Gera a lista com a Memoria e unidades de armazenamento cadastrados no Host com seu tamanho total e usado e exibe o resultado em arquivo separado por virgulas (CSV). &#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39; Gera a lista com a Memoria e unidades de armazenamento cadastrados no Host com seu tamanho total e usado e exibe o resultado em arquivo separado por virgulas (CSV).</span>
+<span class="sd">        dest contem o diretorio fornecido para salvar o relatorio. Tem que fornecer o caminho absoluto.</span>
+<span class="sd">        nome contem o nome do arquivo que sera criado.</span>
+<span class="sd">        idx contem o indice do host, caso nao for fornecido sera retornado todos os hosts cadastrados.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+    <span class="c"># Gera uma lista de tuplas com o(s) host(s) desejado(s).</span>
     <span class="n">l</span> <span class="o">=</span> <span class="n">dbmanager</span><span class="o">.</span><span class="n">query_hosts_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">),</span> <span class="n">idx</span><span class="p">)</span>
+
+    <span class="c"># Verifica ha host para o relatorio</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span> <span class="p">(</span><span class="s">&#39;{0}{1}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">),</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">arq</span><span class="p">:</span>
+            <span class="c"># Cria o arquivo do relatorio no formato CSV</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;{0}{1}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">),</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">arq</span><span class="p">:</span>
+
+                <span class="c"># Insere as colunas no arquivo</span>
                 <span class="n">arq</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;&quot;DATA&quot;;&quot;HORA&quot;;&quot;MEMORIA&quot;;&quot;ID&quot;;&quot;IP&quot;;&quot;UNIDADE&quot;;&quot;TAMANHO TOTAL&quot;;&quot;TAMANHO USADO&quot;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+
+                <span class="c"># Passa host a host inserindo os dados no arquivo.</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
+                    <span class="c"># Passa host a host inserindo os dados no arquivo.</span>
                     <span class="n">lg3</span> <span class="o">=</span> <span class="n">dbmanager</span><span class="o">.</span><span class="n">query_group3_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">),</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+                    <span class="c"># Para cada dados da lista, escreve no arquivo</span>
                     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">lg3</span><span class="p">:</span>
+                        <span class="c"># Remove o separador e separa cada valor para uma variavel para ser escrito no arquivo</span>
                         <span class="n">hrSD</span> <span class="o">=</span> <span class="n">j</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;|&#39;</span><span class="p">)</span>
                         <span class="n">hrSS</span> <span class="o">=</span> <span class="n">j</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;|&#39;</span><span class="p">)</span>
                         <span class="n">hrSU</span> <span class="o">=</span> <span class="n">j</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;|&#39;</span><span class="p">)</span>
+
+                        <span class="c"># Escreve no arquivo</span>
                         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">hrSD</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
                             <span class="n">arq</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;&quot;{0}&quot;;&quot;{1}&quot;;&quot;{2}MB&quot;;&quot;{3}&quot;;&quot;{4}&quot;;&quot;{5}&quot;;&quot;{6}MB&quot;;&quot;{7}MB&quot;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">j</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">j</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">hrSD</span><span class="p">[</span><span class="n">a</span><span class="p">],</span> <span class="n">hrSS</span><span class="p">[</span><span class="n">a</span><span class="p">],</span> <span class="n">hrSU</span><span class="p">[</span><span class="n">a</span><span class="p">]))</span>
+
+            <span class="c"># Chama o gedit para exibir o arquivo</span>
             <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s">&#39;gedit&#39;</span><span class="p">,</span> <span class="s">&#39;{0}{1}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">)])</span>
+
+            <span class="c"># Insere sucesso no log</span>
             <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;SUCESSO ao criar o arquivo {0}{1}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">))</span>
         <span class="k">except</span><span class="p">:</span>
+            <span class="c"># Insere falha no log</span>
             <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;FALHA ao criar o arquivo {0}{1}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">))</span>
             <span class="k">print</span> <span class="s">&#39;Falha ao criar o arquivo.&#39;</span>
     <span class="k">else</span><span class="p">:</span>
+        <span class="c"># Insere falha no log se nao houver hosts para gerar relatorio</span>
         <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;FALHA, Nenhum Host encontrado ao gerar {0}{1}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Nenhum Host encontrado.&#39;</span>
+
 </div>
 <div class="viewcode-block" id="ifs_txt"><a class="viewcode-back" href="../codigo.html#dbquery.ifs_txt">[docs]</a><span class="k">def</span> <span class="nf">ifs_txt</span><span class="p">(</span><span class="n">idx</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Gera a lista das interfaces de rede dos Hosts cadastrados e exibe o resultado em arquivo de texto. &#39;&#39;&#39;</span> 
+    <span class="sd">&#39;&#39;&#39; Gera a lista das interfaces de rede dos Hosts cadastrados e exibe o resultado em arquivo de texto.</span>
+<span class="sd">        idx contem o indice do host, caso nao for fornecido sera retornado todos os hosts cadastrados.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+    <span class="c"># Gera uma lista de tuplas com o(s) host(s) desejado(s).</span>
     <span class="n">l</span> <span class="o">=</span> <span class="n">dbmanager</span><span class="o">.</span><span class="n">query_hosts_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">),</span> <span class="n">idx</span><span class="p">)</span>
+
+    <span class="c"># Verifica ha host para o relatorio</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
+            <span class="c"># Cria o arquivo do relatorio no formato TXT</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;{0}{1}ifs.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">),</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">arq</span><span class="p">:</span>
+
+                <span class="c"># Passa host a host inserindo os dados no arquivo.</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
+                    <span class="c"># Passa host a host inserindo os dados no arquivo.</span>
                     <span class="n">lg6</span> <span class="o">=</span> <span class="n">dbmanager</span><span class="o">.</span><span class="n">query_group6_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">),</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+                    <span class="c"># Para cada dados da lista, escreve no arquivo</span>
                     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">lg6</span><span class="p">:</span>
+                        <span class="c"># Remove o separador e separa cada valor para uma variavel para ser escrito no arquivo</span>
                         <span class="n">ipAEA</span> <span class="o">=</span> <span class="n">j</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;|&#39;</span><span class="p">)</span>
                         <span class="n">ipAEI</span> <span class="o">=</span> <span class="n">j</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;|&#39;</span><span class="p">)</span>
                         <span class="n">ipAENM</span> <span class="o">=</span> <span class="n">j</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;|&#39;</span><span class="p">)</span>
+
+                        <span class="c"># Escreve no arquivo</span>
                         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ipAEA</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
                             <span class="n">arq</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;ID: {0}</span><span class="se">\t</span><span class="s">HOST: {1}</span><span class="se">\t</span><span class="s">DATA: {2}</span><span class="se">\t</span><span class="s">HORA: {3}</span><span class="se">\n</span><span class="s">ID da Interface: {4}</span><span class="se">\n</span><span class="s">IP: {5}</span><span class="se">\n</span><span class="s">Mascara: {6}</span><span class="se">\n\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">j</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">j</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">ipAEI</span><span class="p">[</span><span class="n">a</span><span class="p">],</span> <span class="n">ipAEA</span><span class="p">[</span><span class="n">a</span><span class="p">],</span> <span class="n">ipAENM</span><span class="p">[</span><span class="n">a</span><span class="p">]))</span>
+
+            <span class="c"># Chama o gedit para exibir o relatorio</span>
             <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s">&#39;gedit&#39;</span><span class="p">,</span> <span class="s">&#39;{0}{1}ifs.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">)])</span>
+
+            <span class="c"># Insere sucesso no log</span>
             <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;SUCESSO ao criar o arquivo {0}{1}ifs.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">))</span>
         <span class="k">except</span><span class="p">:</span>
+            <span class="c"># Insere falha no log</span>
             <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;FALHA, Nenhum Host encontrado ao gerar {0}{1}sysusers_process.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">))</span>
             <span class="k">print</span> <span class="s">&#39;Falha ao criar o arquivo.&#39;</span>
     <span class="k">else</span><span class="p">:</span>
+        <span class="c"># Insere falha no log se nao houver hosts para gerar relatorio</span>
         <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;FALHA, Nenhum Host encontrado ao gerar {0}{1}hostslists.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Nenhum Host encontrado.&#39;</span>
+
 </div>
 <div class="viewcode-block" id="ifs_csv"><a class="viewcode-back" href="../codigo.html#dbquery.ifs_csv">[docs]</a><span class="k">def</span> <span class="nf">ifs_csv</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Gera a lista das interfaces de rede dos Hosts cadastrados e exibe o resultado em arquivo separado por virgulas (CSV). &#39;&#39;&#39;</span> 
+    <span class="sd">&#39;&#39;&#39; Gera a lista das interfaces de rede dos Hosts cadastrados e exibe o resultado em arquivo separado por virgulas (CSV).</span>
+<span class="sd">        dest contem o diretorio fornecido para salvar o relatorio. Tem que fornecer o caminho absoluto.</span>
+<span class="sd">        nome contem o nome do arquivo que sera criado.</span>
+<span class="sd">        idx contem o indice do host, caso nao for fornecido sera retornado todos os hosts cadastrados.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+    <span class="c"># Gera uma lista de tuplas com o(s) host(s) desejado(s).</span>
     <span class="n">l</span> <span class="o">=</span> <span class="n">dbmanager</span><span class="o">.</span><span class="n">query_hosts_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">),</span> <span class="n">idx</span><span class="p">)</span>
+
+    <span class="c"># Verifica ha host para o relatorio</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
+            <span class="c"># Cria o arquivo do relatorio no formato CSV</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;{0}{1}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">),</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">arq</span><span class="p">:</span>
+
+                <span class="c"># Insere as colunas no arquivo</span>
                 <span class="n">arq</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;&quot;ID&quot;;&quot;HOST&quot;;&quot;DATA&quot;;&quot;HORA&quot;;&quot;ID INTERFACE&quot;;&quot;IP&quot;;&quot;MASCARA&quot;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+
+                <span class="c"># Passa host a host inserindo os dados no arquivo.</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
+                    <span class="c"># Passa host a host inserindo os dados no arquivo.</span>
                     <span class="n">lg6</span> <span class="o">=</span> <span class="n">dbmanager</span><span class="o">.</span><span class="n">query_group6_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">),</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+                    <span class="c"># Para cada dados da lista, escreve no arquivo</span>
                     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">lg6</span><span class="p">:</span>
+                        <span class="c"># Remove o separador e separa cada valor para uma variavel para ser escrito no arquivo</span>
                         <span class="n">ipAEA</span> <span class="o">=</span> <span class="n">j</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;|&#39;</span><span class="p">)</span>
                         <span class="n">ipAEI</span> <span class="o">=</span> <span class="n">j</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;|&#39;</span><span class="p">)</span>
                         <span class="n">ipAENM</span> <span class="o">=</span> <span class="n">j</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;|&#39;</span><span class="p">)</span>
+
+                        <span class="c"># Escreve no arquivo</span>
                         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ipAEA</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
                             <span class="n">arq</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;&quot;{0}&quot;;&quot;{1}&quot;;&quot;{2}&quot;;&quot;{3}&quot;;&quot;{4}&quot;;&quot;{5}&quot;;&quot;{6}&quot;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">j</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">j</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">ipAEI</span><span class="p">[</span><span class="n">a</span><span class="p">],</span> <span class="n">ipAEA</span><span class="p">[</span><span class="n">a</span><span class="p">],</span> <span class="n">ipAENM</span><span class="p">[</span><span class="n">a</span><span class="p">]))</span>
+
+            <span class="c"># Chama o gedit para exibir o relatorio</span>
             <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s">&#39;gedit&#39;</span><span class="p">,</span> <span class="s">&#39;{0}{1}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">)])</span>
+
+            <span class="c"># Insere sucesso no log</span>
             <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;SUCESSO ao criar o arquivo {0}{1}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">))</span>
         <span class="k">except</span><span class="p">:</span>
+            <span class="c"># Insere falha no log</span>
             <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;FALHA ao criar o arquivo {0}{1}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">))</span>
             <span class="k">print</span> <span class="s">&#39;Falha ao criar o arquivo.&#39;</span>
     <span class="k">else</span><span class="p">:</span>
+        <span class="c"># Insere falha no log se nao houver hosts para gerar relatorio</span>
         <span class="n">logdbquery</span><span class="p">(</span><span class="s">&#39;FALHA, Nenhum Host encontrado ao gerar {0}{1}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Nenhum Host encontrado.&#39;</span>
 </div>

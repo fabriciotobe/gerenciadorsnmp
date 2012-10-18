@@ -25,15 +25,16 @@ parser.add_argument('IPi', help='Initial IP.')
 parser.add_argument('IPf', help='Final IP.')
 args = parser.parse_args()
 
+
 def iplist(ip_ini, ip_fin):
     ''' Gera a lista de IPs do range fornecido. '''
     x = ip_ini.split('.')
     y = ip_fin.split('.')
     l = []
-    
+
     # Faz a validacao dos ips
     if len(x) != 4 or len(y) != 4:
-        print 'Erro na sequencia de IPs fornecidos.' 
+        print 'Erro na sequencia de IPs fornecidos.'
     try:
         if x[3] > y[3]:
             ip_ini, ip_fin = ip_fin, ip_ini
@@ -44,6 +45,7 @@ def iplist(ip_ini, ip_fin):
     except:
         print 'Erro!'
     return l
+
 
 def checkhostonline(ip):
     ''' Envia um ping para um Host e retorna verdadeiro ou falso. '''
@@ -60,6 +62,7 @@ def checkhostonline(ip):
             return False
     except:
         return False
+
 
 def checksnmpservice_old(target, port, timeout):
     ''' Verifica se um Host de um porta UDP aberta e retorna verdadeiro ou falso. '''
@@ -79,6 +82,7 @@ def checksnmpservice_old(target, port, timeout):
     else:
         return False
 
+
 def checksnmpservice(target):
     ''' Verifica se o Host responde a um SNMP Get e retorna verdadeiro ou falso seguido do nome do Host '''
     cmdGen = cmdgen.CommandGenerator()
@@ -87,11 +91,11 @@ def checksnmpservice(target):
         cmdgen.UdpTransportTarget((target, settings.DEFAULT_PORT)),
         cmdgen.MibVariable(settings.SNMP_VERSION, settings.DEFAULT_FIELD, 0)
     )
-    if errorIndication == None:
+    if errorIndication is None:
         return True, varBinds[0][1]
     else:
         return False, ''
-    
+
 
 def ctrl(lip=[]):
     ''' Gerencia as listas de sucesso e falha '''
@@ -99,14 +103,12 @@ def ctrl(lip=[]):
     lfail = []
     lsnmpsucess = []
     lsnmpfail = []
-
     print '\n'
     if len(lip) == 0:
-        lip = iplist(args.IPi, args.IPf) # Generate the IP list
-
+        lip = iplist(args.IPi, args.IPf)  # Generate the IP list
     print 'Aguarde, o processo pode demorar dependendo do numero de Hosts...'
     print 'HOST\t\t\tSTATUS'
-    for ip in lip: #Checking ping agains the IPs
+    for ip in lip:  # Checking ping agains the IPs
         if checkhostonline(ip):
             lsucess.append(ip)
             print '{0}\t\t\033[32mOnline\033[0;0m'.format(ip)
@@ -114,13 +116,13 @@ def ctrl(lip=[]):
             lfail.append(ip)
             print '{0}\t\t\033[31mOffline\033[0;0m'.format(ip)
     print '\n'
-    
+
     ## Loggins Ping Sucess and Ping Fails
     if len(lfail) > 0:
         logipscanner(lfail, 0)
     if len(lsucess) > 0:
         logipscanner(lsucess, 1)
-    
+
     ## Checking SNMP Service on the IPs with Ping Sucess
     print 'HOST\t\t\tHOST NAME\t\t\tSNMP'
     for ip in lsucess:
@@ -138,15 +140,18 @@ def ctrl(lip=[]):
     if len(lsnmpsucess) > 0:
         logipscanner(lsnmpsucess, 3)
     return lsnmpsucess, lfail, lsnmpfail
-    
+
+
 def reg_hosts(l):
     laux = reg_query_db('{0}{1}'.format(settings.INSTALL_PATH, settings.DB), l)
     reg_hosts_db('{0}{1}'.format(settings.INSTALL_PATH, settings.DB), laux)
 
+
 def options():
     ''' Desenha o menu de opcoes do ipscanner '''
     print '\n------------------------------------------------------------\n1) Cadastrar Hosts com Servico SNMP ativo no Banco de Dados?\n2) Tentar novamente Hosts com falha no Ping?\n3) Tentar novamente Hosts com falha no SNMP?\n4) Cancelar.'
-    return raw_input('Escolher: ')    
+    return raw_input('Escolher: ')
+
 
 if __name__ == '__main__':
     mainlist = ctrl()

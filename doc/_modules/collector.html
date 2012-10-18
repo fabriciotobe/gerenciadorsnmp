@@ -52,11 +52,12 @@
 <span class="c">#!/usr/bin/env python</span>
 <span class="c">#coding: utf-8</span>
 
-<span class="c"># AUTOR: Fabricio Kelmer</span>
-<span class="c"># CONTATO: fabriciotobe@gmail.com</span>
-<span class="c"># DATA: 16 de Outubro de 2012</span>
+<span class="c"># @autor: Fabricio Kelmer</span>
+<span class="c"># @contato: fabriciotobe@gmail.com</span>
+<span class="c"># @data: 16 de Outubro de 2012</span>
 
-<span class="c"># O coletor coleta a informacao de todos os hosts cadastrados na tabela Hosts do Banco de Dados.</span>
+<span class="c"># O programa realiza coleta a informacao de todos os hosts cadastrados na tabela Hosts do Banco de Dados.</span>
+<span class="c"># A coleta pode ser feita manualmente ou atraves de agendamento no cron</span>
 
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">from</span> <span class="nn">dbmanager</span> <span class="kn">import</span> <span class="n">query_hosts_db</span>
@@ -64,15 +65,29 @@
 <span class="kn">from</span> <span class="nn">logs</span> <span class="kn">import</span> <span class="n">logcollector</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 
+
 <div class="viewcode-block" id="collector"><a class="viewcode-back" href="../codigo.html#collector.collector">[docs]</a><span class="k">def</span> <span class="nf">collector</span><span class="p">():</span>
-    <span class="sd">&#39;&#39;&#39; O coletor coleta a informacao de todos os hosts cadastrados na tabela Hosts e armazena no Banco de Dados. &#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39;O programa coleta a informacao de todos os hosts cadastrados na tabela Hosts e armazena no Banco de Dados. A coleta pode ser realizada diretamente ou via agendamento no cron.</span>
+<span class="sd">       Para toda a atividade de coleta sao geradas entradas de log, que ficam armazenadas no subdiretorio log (padrao alteravel via settings.</span>
+<span class="sd">           **Execucao**</span>
+<span class="sd">           Ao iniciar e feito uma query no Banco de Dados na tabela Hosts, obtendo todos os hosts cadastrados e seus respectivos IDs e IPs.</span>
+<span class="sd">           Os hosts sao passado um a um para o programa snmpget que ira enviar gets, tratar os retornos e armazenar as informacoes no Banco de Dados.</span>
+<span class="sd">           Todas as operacoes do collector sao armazenadas no log log_collector.log. &#39;&#39;&#39;</span>
+    <span class="c"># Chama uma query que listara todos os hosts cadastrados no Banco de Dados na tabela Hosts. E retornado uma lista de tuplas [(id, ip), (id, ip), ...]</span>
     <span class="n">l</span> <span class="o">=</span> <span class="n">query_hosts_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">))</span>
+
+    <span class="c"># Inicia a execucao do coletor se for retornada uma lista de Hosts</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+
+        <span class="c"># Vai passando hosts a hosts e chamando o programa snmpget, que recolhe as informacoes de host</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
             <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s">&#39;{0}snmpget.py&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">])])</span>
             <span class="k">print</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span>
+
+            <span class="c"># Insere informacao de sucesso no log</span>
             <span class="n">logcollector</span><span class="p">(</span><span class="s">&#39;SUCESSO, hosts coletados.&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
+        <span class="c"># Insere informacao de falha no log</span>
         <span class="n">logcollector</span><span class="p">(</span><span class="s">&#39;FALHA, nenhum host para ser coletado.&#39;</span><span class="p">)</span>
         <span class="k">print</span> <span class="s">&#39;FALHA, Nenhum host para coletar.&#39;</span>
 </div>

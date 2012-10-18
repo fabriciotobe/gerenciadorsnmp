@@ -42,7 +42,7 @@
 #       1.3.6.1.2.1.25.2.3.1.6, hrStorageUsed
 #       1.3.6.1.2.1.25.2.3.1.7, hrStorageAllocationFailure, nao
 #
-# Grupo 4: hrSWRun - NAO ESTA SENDO UTILIZADO 
+# Grupo 4: hrSWRun - NAO ESTA SENDO UTILIZADO
 #        oid, nome do campo, utilizado - descricao
 #        1.3.6.1.2.1.25.4.2.1.1, hrSWRunIndex
 #        1.3.6.1.2.1.25.4.2.1.2, hrSWRunName - nome do processo
@@ -52,7 +52,7 @@
 #        1.3.6.1.2.1.25.4.2.1.6, hrSWRunType
 #        1.3.6.1.2.1.25.4.2.1.7, hrSWRunStauts
 #
-# Grupo 5: hrSWRunPerf - NAO ESTA SENDO UTILIZADO 
+# Grupo 5: hrSWRunPerf - NAO ESTA SENDO UTILIZADO
 #        oid, nome do campo, utilizado - descricao
 #        1.3.6.1.2.1.25.5.1.1.1, hrSWRunPerfCPU - Porcentagem do uso do processador
 #        1.3.6.1.2.1.25.5.1.1.2, hrSWRunPerfMem - Memoria usada em Kbytes
@@ -74,12 +74,13 @@ from settings import DB, INSTALL_PATH
 from logs import logsnmpget
 
 parser = argparse.ArgumentParser(description='Recolher informacoes de um Host passado por argumento')
-parser.add_argument('ID', help='ID do Host', type = int)
+parser.add_argument('ID', help='ID do Host', type=int)
 parser.add_argument('HOST', help='IP do Host')
 args = parser.parse_args()
 
 HOST = args.HOST
 ID = args.ID
+
 
 def time_conversion(timestr):
     ''' Converte o tempo em segundos para horas e minutos '''
@@ -91,6 +92,7 @@ def time_conversion(timestr):
         return '{0} hora(s) e {1} minuto(s)'.format(int(h), int(m))
     except:
         return '0'
+
 
 def group1():
     resultl = []
@@ -111,8 +113,7 @@ def group1():
         if errorStatus:
             print('%s at %s' % (
                 errorStatus.prettyPrint(),
-                errorIndex and varBindTable[-1][int(errorIndex)-1] or '?'
-                )
+                errorIndex and varBindTable[-1][int(errorIndex) - 1] or '?')
             )
             logsnmpget('FAIL: ID {0} - HOST {1} - {0}'.format(ID, HOST, errorStatus.prettyPrint()))
         else:
@@ -136,6 +137,7 @@ def group1():
             reg_group1_db('{0}{1}'.format(INSTALL_PATH, DB), resultl)
             logsnmpget('SUCESSO: Dados do Grupo 1 do ID {0} e Host {1} coletados.'.format(ID, HOST))
 
+
 def group2():
     resultl = []
     cmdGen = cmdgen.CommandGenerator()
@@ -152,8 +154,7 @@ def group2():
         if errorStatus:
             print('%s at %s' % (
                 errorStatus.prettyPrint(),
-                errorIndex and varBindTable[-1][int(errorIndex)-1] or '?'
-                )
+                errorIndex and varBindTable[-1][int(errorIndex) - 1] or '?')
             )
             logsnmpget('FAIL: ID {0} - HOST {1} - {0}'.format(ID, HOST, errorStatus.prettyPrint()))
         else:
@@ -171,6 +172,7 @@ def group2():
                 reg_group2_db('{0}{1}'.format(INSTALL_PATH, DB), resultl)
                 logsnmpget('SUCESSO: Dados do Grupo 1 do ID {0} e Host {1} coletados.'.format(ID, HOST))
 
+
 def group3id():
     lmount = []
     mem = ''
@@ -178,7 +180,7 @@ def group3id():
     errorIndication, errorStatus, errorIndex, varBindTable = cmdGen.nextCmd(
         cmdgen.CommunityData('public'),
         cmdgen.UdpTransportTarget((HOST, 161)),
-       '1.3.6.1.2.1.25.2'
+        '1.3.6.1.2.1.25.2'
     )
     if errorIndication:
         print(errorIndication)
@@ -187,18 +189,18 @@ def group3id():
         if errorStatus:
             print('%s at %s' % (
                 errorStatus.prettyPrint(),
-                errorIndex and varBindTable[-1][int(errorIndex)-1] or '?'
-                )
+                errorIndex and varBindTable[-1][int(errorIndex) - 1] or '?')
             )
             logsnmpget('FAIL: ID {0} - HOST {1} - {0}'.format(ID, HOST, errorStatus.prettyPrint()))
         else:
             for varBindTableRow in varBindTable:
                 for name, val in varBindTableRow:
                     if str(name) == '1.3.6.1.2.1.25.2.2.0':
-                       mem = str(int(val) / 1024)
+                        mem = str(int(val) / 1024)
                     if str(name).find('1.3.6.1.2.1.25.2.3.1.1.') >= 0:
-                       lmount.append(str(name).split('.')[-1])
+                        lmount.append(str(name).split('.')[-1])
     return varBindTable, lmount, mem
+
 
 def group3(varBindTable, lmount, mem):
     resultl = []
@@ -218,12 +220,13 @@ def group3(varBindTable, lmount, mem):
         resultl.append(mem)
     resultl.append(hrStorageDescr)
     resultl.append(hrStorageSize)
-    resultl.append(hrStorageUsed)        
+    resultl.append(hrStorageUsed)
     resultl.append(datetime.today().strftime('%d/%m/%Y'))
     resultl.append(datetime.today().strftime('%H:%M:%S'))
     if len(resultl) == 8:
         reg_group3_db('{0}{1}'.format(INSTALL_PATH, DB), resultl)
         logsnmpget('SUCESSO: Dados do Grupo 1 do ID {0} e Host {1} coletados.'.format(ID, HOST))
+
 
 def group4id():
     lmount = []
@@ -240,8 +243,7 @@ def group4id():
         if errorStatus:
             print('%s at %s' % (
                 errorStatus.prettyPrint(),
-                errorIndex and varBindTable[-1][int(errorIndex)-1] or '?'
-                )
+                errorIndex and varBindTable[-1][int(errorIndex) - 1] or '?')
             )
             logsnmpget('FAIL: ID {0} - HOST {1} - {0}'.format(ID, HOST, errorStatus.prettyPrint()))
         else:
@@ -250,6 +252,7 @@ def group4id():
                     if str(name).find('1.3.6.1.2.1.25.4.2.1.1.') >= 0:
                         lmount.append(str(name).split('.')[-1])
     return varBindTable, lmount
+
 
 def group4(varBindTable, lmount):
     for i in lmount:
@@ -264,12 +267,13 @@ def group4(varBindTable, lmount):
                 if str(name) == '1.3.6.1.2.1.25.4.2.1.5.{0}'.format(i):
                     arq.writelines('hrSWRunParameters - Parametros: {0}\n'.format(val))
 
+
 def group5id():
     cmdGen = cmdgen.CommandGenerator()
     errorIndication, errorStatus, errorIndex, varBindTable = cmdGen.nextCmd(
         cmdgen.CommunityData('public'),
         cmdgen.UdpTransportTarget((HOST, 161)),
-       '1.3.6.1.2.1.25.5'
+        '1.3.6.1.2.1.25.5'
     )
     if errorIndication:
         print(errorIndication)
@@ -278,13 +282,13 @@ def group5id():
         if errorStatus:
             print('%s at %s' % (
                 errorStatus.prettyPrint(),
-                errorIndex and varBindTable[-1][int(errorIndex)-1] or '?'
-                )
+                errorIndex and varBindTable[-1][int(errorIndex) - 1] or '?')
             )
             logsnmpget('FAIL: ID {0} - HOST {1} - {0}'.format(ID, HOST, errorStatus.prettyPrint()))
         else:
             pass
     return varBindTable
+
 
 def group5(varBindTable, lmount):
     cpuperc = 0
@@ -292,7 +296,7 @@ def group5(varBindTable, lmount):
         for varBindTableRow in varBindTable:
             for name, val in varBindTableRow:
                 if str(name) == '1.3.6.1.2.1.25.5.1.1.1.{0}'.format(i):
-                    cpuperc += int(val)             
+                    cpuperc += int(val)
     for i in lmount:
         for varBindTableRow in varBindTable:
             for name, val in varBindTableRow:
@@ -300,6 +304,7 @@ def group5(varBindTable, lmount):
                     arq.writelines('hrSWRunPerfCPU - Uso de CPU: {0}%\n'.format(str(round((float(val) * 100) / cpuperc, 2))))
                 if str(name) == '1.3.6.1.2.1.25.5.1.1.2.{0}'.format(i):
                     arq.writelines('hrSWRunPerfMem - Uso de Memoria: {0}Kb\n'.format(val))
+
 
 def group6id():
     lmount = []
@@ -316,8 +321,7 @@ def group6id():
         if errorStatus:
             print('%s at %s' % (
                 errorStatus.prettyPrint(),
-                errorIndex and varBindTable[-1][int(errorIndex)-1] or '?'
-                )
+                errorIndex and varBindTable[-1][int(errorIndex) - 1] or '?')
             )
             logsnmpget('FAIL: ID {0} - HOST {1} - {0}'.format(ID, HOST, errorStatus.prettyPrint()))
         else:
@@ -326,6 +330,7 @@ def group6id():
                     if str(name).find('1.3.6.1.2.1.4.20.1.1.') >= 0:
                         lmount.append(re.search(r'1\.3\.6\.1\.2\.1\.4\.20\.1\.1\.(.*)', str(name)).group(1))
     return varBindTable, lmount
+
 
 def group6(varBindTable, lmount):
     resultl = []
@@ -352,20 +357,18 @@ def group6(varBindTable, lmount):
         logsnmpget('SUCESSO: Dados do Grupo 1 do ID {0} e Host {1} coletados.'.format(ID, HOST))
 
 if __name__ == '__main__':
-    group1()                                # grupo1
-    group2()                                # grupo2
-    varBindTable, lmount, mem = group3id()  # grupo3
-    group3(varBindTable, lmount, mem)       # grupo3
+    group1()
+    group2()
+    varBindTable, lmount, mem = group3id()
+    group3(varBindTable, lmount, mem)
     del varBindTable, lmount
-    
-#    Removido, possui muita informacao para ser tratada
-#    Fica como melhoria inserir as informacoes de processos
-#    varBindTable, lmount = group4id()       # grupo4
-#    group4(varBindTable, lmount)            # grupo4
-#    del varBindTable
-#    varBindTable = group5id()               # grupo5        
-#    group5(varBindTable, lmount)            # grupo5
-#    del varBindTable, lmount
 
-    varBindTable, lmount = group6id()       # grupo6
-    group6(varBindTable, lmount)            # grupo6
+    # varBindTable, lmount = group4id()
+    # group4(varBindTable, lmount)
+    # del varBindTable
+    # varBindTable = group5id()
+    # group5(varBindTable, lmount)
+    # del varBindTable, lmount
+
+    varBindTable, lmount = group6id()
+    group6(varBindTable, lmount)

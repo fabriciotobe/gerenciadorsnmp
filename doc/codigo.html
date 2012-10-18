@@ -59,179 +59,254 @@
 <dl class="function">
 <dt id="collector.collector">
 <tt class="descclassname">collector.</tt><tt class="descname">collector</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/collector.html#collector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#collector.collector" title="Permalink to this definition">¶</a></dt>
-<dd><p>O coletor coleta a informacao de todos os hosts cadastrados na tabela Hosts e armazena no Banco de Dados.</p>
+<dd><p>O programa coleta a informacao de todos os hosts cadastrados na tabela Hosts e armazena no Banco de Dados. A coleta pode ser realizada diretamente ou via agendamento no cron.
+Para toda a atividade de coleta sao geradas entradas de log, que ficam armazenadas no subdiretorio log (padrao alteravel via settings.
+<strong>Execucao</strong>
+Ao iniciar e feito uma query no Banco de Dados na tabela Hosts, obtendo todos os hosts cadastrados e seus respectivos IDs e IPs.
+Os hosts sao passado um a um para o programa snmpget que ira enviar gets, tratar os retornos e armazenar as informacoes no Banco de Dados.
+Todas as operacoes do collector sao armazenadas no log log_collector.log.</p>
 </dd></dl>
 
 <span class="target" id="module-dbmanager"></span><dl class="function">
 <dt id="dbmanager.alter_host_db">
 <tt class="descclassname">dbmanager.</tt><tt class="descname">alter_host_db</tt><big>(</big><em>db</em>, <em>hosts_list</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#alter_host_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.alter_host_db" title="Permalink to this definition">¶</a></dt>
-<dd><p>Altera os dados de um Host fornecido
-db: Banco de Dados
-hosts_lists: tupla com ip e nome do host</p>
+<dd><p>Altera os dados de um Host fornecido.
+O Banco de Dados utilizando e o definido no settings.py.
+hosts_lists contem uma tupla com ip e nome do host no formato [(ip, nomedohost), (ip, nomedohost), ...]. E fornecido apenas um host por vez.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbmanager.create_db">
 <tt class="descclassname">dbmanager.</tt><tt class="descname">create_db</tt><big>(</big><em>db</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#create_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.create_db" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cria o arquivo do Banco de Dados</p>
+<dd><p>Cria o arquivo do Banco de Dados vazio (sem tabelas).
+E utilizado por padrao o caminho do Banco de Dados definidos no settings.py
+As operacaoes de sucesso e falha sao inseridas no arquivo de log log_dbmanager</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbmanager.create_tables_db">
 <tt class="descclassname">dbmanager.</tt><tt class="descname">create_tables_db</tt><big>(</big><em>db</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#create_tables_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.create_tables_db" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cria as tabelas no Banco de dados
-db: Banco de Dados</p>
+<dd><p>Cria as tabelas no Banco de dados.
+O Banco de Dados utilizando e o definido no settings.py</p>
+<ul>
+<li><p class="first">Tabelas:</p>
+<ul class="simple">
+<li>Hosts - Tabela que contem os Hosts cadastrados.
+Campos:
+id: identificador automatico.
+ip: ip do host.
+hostname: nome do host.</li>
+<li>Group1 - Tabela que armazena as informacoes do Grupo 1.
+Campos:
+id: identificados automatico
+idhost: id do host
+sysDescr: descricao do sistema, contem sistema operacional, distribuicao, processador, arquitetura, data e hora.
+sysUpTime: tempo que o sistema esta ligado.
+sysContact: contato do sistema.
+sysLocation: local do sistema.
+sysServices: servicos do sistema.
+data: Data da coleta.
+hora: Hora da coleta.</li>
+</ul>
+<dl class="docutils">
+<dt>-Group2 - Tabela que armazena as informacoes do Grupo 2</dt>
+<dd><p class="first last">Campos:
+id: identificador automatico.
+idhost: id do host.
+hrSystemUsers: usuarios logados.
+hrSystemProcess: total de processos rodando.
+data: data da coleta.
+hora: horario da coleta.</p>
+</dd>
+</dl>
+<ul class="simple">
+<li>Group3 - Tabela que armazena as informacoes do Grupo 3
+Campos:
+id: identificador automatico.
+idhost: id do host.
+Memory: memoria do sistema.
+hrStorageDescr: descricao da unidade de armazenamento.
+hrStorageSize: tamanho da unidade de armazenamento.
+hrStorageUsed: espaco usado na unidade de armazenamento.
+data: Data da coleta.
+hora: horario da coleta.</li>
+<li>Group6 - Tabela que armazena as informacoes do Grupo 6
+Campos:
+id: identificador automatico.
+idhost: id do host.
+ipAdEntAddr: enderecos de ip separados por &#8220;|&#8221;.
+ipAdEntifIndex: identificador da interface de rede do host separados por &#8220;|&#8221;.
+ipAdEndNetMask: mascara de rede separados por &#8220;|&#8221;</li>
+</ul>
+</li>
+</ul>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbmanager.del_hosts_db">
 <tt class="descclassname">dbmanager.</tt><tt class="descname">del_hosts_db</tt><big>(</big><em>db</em>, <em>hosts_list</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#del_hosts_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.del_hosts_db" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exclui hosts do Banco de Dados 
-db: Banco de Dados
-hosts_list: Lista de tuplas com ips e nomes de host</p>
+<dd><p>Exclui hosts do Banco de Dados na tabela Hosts.
+O Banco de Dados utilizando e o definido no settings.py.
+hosts_list contem uma lista de tuplas com ips e nomes de host no formato [(ip, nomedohost), (ip, nomedohost), ...]. Pode ser passado uma lista, mas na chamada interna do programa manager e passado uma lista com uma tupla apenas.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbmanager.drop_tables_db">
 <tt class="descclassname">dbmanager.</tt><tt class="descname">drop_tables_db</tt><big>(</big><em>db</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#drop_tables_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.drop_tables_db" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exclui as tabelas do Banco de Dados
-dp: Banco de Dados</p>
+<dd><p>Exclui as tabelas do Banco de Dados.
+O Banco de Dados utilizando e o definido no settings.py.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbmanager.query_group1_db">
 <tt class="descclassname">dbmanager.</tt><tt class="descname">query_group1_db</tt><big>(</big><em>db</em>, <em>idhost</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#query_group1_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.query_group1_db" title="Permalink to this definition">¶</a></dt>
-<dd><p>Executa um select na tabela de Group1 e retorna todos os dados da ultima consulta automatica do ID fornecido 
-db = Banco de Dados
-idhost = ID do host consultador</p>
+<dd><p>Executa um SELECT na tabela de Group1 e retorna todos os dados das consulta automatica do ID fornecido.
+O Banco de Dados utilizando e o definido no settings.py.
+idhost contem o ID do host consultado.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbmanager.query_group2_db">
 <tt class="descclassname">dbmanager.</tt><tt class="descname">query_group2_db</tt><big>(</big><em>db</em>, <em>idhost</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#query_group2_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.query_group2_db" title="Permalink to this definition">¶</a></dt>
-<dd><p>Executa um select na tabela de Group2 e retorna uma lista com todos os dados da consulta automatica do ID fornecido 
-db = Banco de Dados
-idhost = ID do host consultado</p>
+<dd><p>Executa um SELECT na tabela de Group2 e retorna uma lista com todos os dados das consulta automatica do ID fornecido.
+O Banco de Dados utilizando e o definido no settings.py.
+idhost contem o ID do host consultado.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbmanager.query_group3_db">
 <tt class="descclassname">dbmanager.</tt><tt class="descname">query_group3_db</tt><big>(</big><em>db</em>, <em>idhost</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#query_group3_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.query_group3_db" title="Permalink to this definition">¶</a></dt>
 <dd><p>Executa um select na tabela de Group3 e retorna uma lista com todos os dados da consulta automatica do ID fornecido
-db = Banco de Dados
-idhost = ID do host consultado</p>
+O Banco de Dados utilizando e o definido no settings.py.
+idhost contem o ID do host consultado.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbmanager.query_group6_db">
 <tt class="descclassname">dbmanager.</tt><tt class="descname">query_group6_db</tt><big>(</big><em>db</em>, <em>idhost</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#query_group6_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.query_group6_db" title="Permalink to this definition">¶</a></dt>
-<dd><p>Executa um select na tabela de Group6 e retorna uma lista com todos os dados da consulta automatica do ID fornecido
-db = Banco de Dados
+<dd><p>Executa um select na tabela de Group6 e retorna uma lista com todos os dados da consulta automatica do ID fornecido.
+O Banco de Dados utilizando e o definido no settings.py.
 idhost = ID do host consultado</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbmanager.query_hosts_db">
 <tt class="descclassname">dbmanager.</tt><tt class="descname">query_hosts_db</tt><big>(</big><em>db</em>, <em>idx=''</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#query_hosts_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.query_hosts_db" title="Permalink to this definition">¶</a></dt>
-<dd><p>Executa um select na tabela de Hosts e retorna a lista de Hosts (id e ip) 
-db = Banco de Dados
-idx = ID do Host, se fornecido, executa a consulta somente daquele host</p>
+<dd><p>Executa um SELECT na tabela de Hosts e retorna a lista de tupla de Hosts no formato [(id, ip, hostname), (id, ip, hostname), ...].
+O Banco de Dados utilizando e o definido no settings.py.
+idx contem um id de Host, se fornecido, executa a consulta somente daquele host. Padrao e vazio, que determina a consulta de todos os hosts.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbmanager.reg_group1_db">
 <tt class="descclassname">dbmanager.</tt><tt class="descname">reg_group1_db</tt><big>(</big><em>db</em>, <em>hosts_list</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#reg_group1_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.reg_group1_db" title="Permalink to this definition">¶</a></dt>
-<dd><p>Grava do Dados do Grupo 1 no Banco de Dados 
-db = Banco de Dados
-hosts_list = Lista com {0}idhost, {2}sysDescr, {3}sysUpTime, {4}sysContact, {5}sysLocation, {6}sysServices, {7}data, {8}hora</p>
+<dd><p>Grava do Dados do Grupo 1 no Banco de Dados.
+O Banco de Dados utilizando e o definido no settings.py.
+hosts_list contem uma lista com idhost, sysDescr, sysUpTime, sysContact, sysLocation, sysServices, data e hora.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbmanager.reg_group2_db">
 <tt class="descclassname">dbmanager.</tt><tt class="descname">reg_group2_db</tt><big>(</big><em>db</em>, <em>hosts_list</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#reg_group2_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.reg_group2_db" title="Permalink to this definition">¶</a></dt>
-<dd><p>Grava do Dados do Grupo 2 no Banco de Dados 
-db = Banco de Dados
-hosts_list = Lista com {0}idhost, {2}hrSystemUsers, {3}hrSystemProcess, {4}data, {5}hora</p>
+<dd><p>Grava do Dados do Grupo 2 no Banco de Dados.
+O Banco de Dados utilizando e o definido no settings.py.
+hosts_list conte uma lista com idhost, hrSystemUsers, hrSystemProcess, data e hora.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbmanager.reg_group3_db">
 <tt class="descclassname">dbmanager.</tt><tt class="descname">reg_group3_db</tt><big>(</big><em>db</em>, <em>hosts_list</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#reg_group3_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.reg_group3_db" title="Permalink to this definition">¶</a></dt>
-<dd><p>Grava do Dados do Grupo 3 no Banco de Dados 
-db = Banco de Dados
-hosts_list = Lista com {0}idhost, {2}Memory, {3}hrStorageDescr, {4}hrStorageSize, {5}hrStorageUsed, {6}data, {7}hora</p>
+<dd><p>Grava do Dados do Grupo 3 no Banco de Dados.
+O Banco de Dados utilizando e o definido no settings.py.
+hosts_list contem a lista com idhost, Memory, hrStorageDescr, hrStorageSize, hrStorageUsed, data e hora</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbmanager.reg_group6_db">
 <tt class="descclassname">dbmanager.</tt><tt class="descname">reg_group6_db</tt><big>(</big><em>db</em>, <em>hosts_list</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#reg_group6_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.reg_group6_db" title="Permalink to this definition">¶</a></dt>
-<dd><p>Grava do Dados do Grupo 6 no Banco de Dados 
-db = Banco de Dados
-hosts_list = Lista com {0}idhost, {2}ipAdEntAddr, {3}ipAdEntifIndex, {4}ipAdEndNetMask</p>
+<dd><p>Grava do Dados do Grupo 6 no Banco de Dados.
+O Banco de Dados utilizando e o definido no settings.py.
+hosts_list contem uma lista com idhost, ipAdEntAddr, ipAdEntifIndex e ipAdEndNetMask</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbmanager.reg_hosts_db">
 <tt class="descclassname">dbmanager.</tt><tt class="descname">reg_hosts_db</tt><big>(</big><em>db</em>, <em>hosts_list</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#reg_hosts_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.reg_hosts_db" title="Permalink to this definition">¶</a></dt>
-<dd><p>Grava no Banco de Dados na tabela Hosts 
-db: Banco de Dados
-hosts_list: Lista de tuplas com ips e nomes de host</p>
+<dd><p>Insere informacoes no Banco de Dados na tabela Hosts.
+O Banco de Dados utilizando e o definido no settings.py.
+hosts_list contem uma lista de tuplas com ips e nomes de host no formato [(ip, nomedohost), (ip, nomedohost), ...]</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbmanager.reg_query_db">
 <tt class="descclassname">dbmanager.</tt><tt class="descname">reg_query_db</tt><big>(</big><em>db</em>, <em>hosts_list</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#reg_query_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.reg_query_db" title="Permalink to this definition">¶</a></dt>
-<dd><p>Recebe uma lista e consulta a tabela de Hosts, verifica os hosts cadastrados e retorna os hosts que nao existem na tabela.
-db: Banco de Dados
-hosts_list: Lista de tupla contendo ips e nomes de hosts.</p>
+<dd><p>Recebe uma lista de hosts, executa um SELECT na tabela hosts e retorna uma lista com os IPs que nao existem na tabela Hosts.
+O Banco de Dados utilizando e o definido no settings.py.
+hosts_list contem lista de IPs.</p>
 </dd></dl>
 
 <span class="target" id="module-dbquery"></span><dl class="function">
 <dt id="dbquery.hostlist_csv">
 <tt class="descclassname">dbquery.</tt><tt class="descname">hostlist_csv</tt><big>(</big><em>dest</em>, <em>nome</em>, <em>idx=''</em><big>)</big><a class="reference internal" href="_modules/dbquery.html#hostlist_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbquery.hostlist_csv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gera a lista de Hosts e exibe o resultado em arquivo separado por virgulas (CSV).</p>
+<dd><p>Gera a lista de Hosts e exibe o resultado em arquivo separado por virgulas (CSV).
+dest contem o diretorio fornecido para salvar o relatorio. Tem que fornecer o caminho absoluto.
+nome contem o nome do arquivo que sera criado.
+idx contem o indice do host, caso nao for fornecido sera retornado todos os hosts cadastrados.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbquery.hostlist_txt">
 <tt class="descclassname">dbquery.</tt><tt class="descname">hostlist_txt</tt><big>(</big><em>idx=''</em><big>)</big><a class="reference internal" href="_modules/dbquery.html#hostlist_txt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbquery.hostlist_txt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gera a lista de Hosts e exibe o resultado em arquivo de texto.</p>
+<dd><p>Gera a lista de Hosts e formata o resultado para ser inserido em um arquivo de texto.
+idx contem o indice do host, caso nao for fornecido sera retornado todos os hosts cadastrados.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbquery.ifs_csv">
 <tt class="descclassname">dbquery.</tt><tt class="descname">ifs_csv</tt><big>(</big><em>dest</em>, <em>nome</em>, <em>idx=''</em><big>)</big><a class="reference internal" href="_modules/dbquery.html#ifs_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbquery.ifs_csv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gera a lista das interfaces de rede dos Hosts cadastrados e exibe o resultado em arquivo separado por virgulas (CSV).</p>
+<dd><p>Gera a lista das interfaces de rede dos Hosts cadastrados e exibe o resultado em arquivo separado por virgulas (CSV).
+dest contem o diretorio fornecido para salvar o relatorio. Tem que fornecer o caminho absoluto.
+nome contem o nome do arquivo que sera criado.
+idx contem o indice do host, caso nao for fornecido sera retornado todos os hosts cadastrados.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbquery.ifs_txt">
 <tt class="descclassname">dbquery.</tt><tt class="descname">ifs_txt</tt><big>(</big><em>idx=''</em><big>)</big><a class="reference internal" href="_modules/dbquery.html#ifs_txt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbquery.ifs_txt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gera a lista das interfaces de rede dos Hosts cadastrados e exibe o resultado em arquivo de texto.</p>
+<dd><p>Gera a lista das interfaces de rede dos Hosts cadastrados e exibe o resultado em arquivo de texto.
+idx contem o indice do host, caso nao for fornecido sera retornado todos os hosts cadastrados.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbquery.memory_storage_csv">
 <tt class="descclassname">dbquery.</tt><tt class="descname">memory_storage_csv</tt><big>(</big><em>dest</em>, <em>nome</em>, <em>idx=''</em><big>)</big><a class="reference internal" href="_modules/dbquery.html#memory_storage_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbquery.memory_storage_csv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gera a lista com a Memoria e unidades de armazenamento cadastrados no Host com seu tamanho total e usado e exibe o resultado em arquivo separado por virgulas (CSV).</p>
+<dd><p>Gera a lista com a Memoria e unidades de armazenamento cadastrados no Host com seu tamanho total e usado e exibe o resultado em arquivo separado por virgulas (CSV).
+dest contem o diretorio fornecido para salvar o relatorio. Tem que fornecer o caminho absoluto.
+nome contem o nome do arquivo que sera criado.
+idx contem o indice do host, caso nao for fornecido sera retornado todos os hosts cadastrados.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbquery.memory_storage_txt">
 <tt class="descclassname">dbquery.</tt><tt class="descname">memory_storage_txt</tt><big>(</big><em>idx=''</em><big>)</big><a class="reference internal" href="_modules/dbquery.html#memory_storage_txt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbquery.memory_storage_txt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gera a lista com a Memoria e unidades de armazenamento cadastrados no Host com seu tamanho total e usado e exibe o resultado em arquivo de texto.</p>
+<dd><p>Gera a lista com a Memoria e unidades de armazenamento cadastrados no Host com seu tamanho total e usado e exibe o resultado em arquivo de texto.
+idx contem o indice do host, caso nao for fornecido sera retornado todos os hosts cadastrados.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbquery.sysusers_process_csv">
 <tt class="descclassname">dbquery.</tt><tt class="descname">sysusers_process_csv</tt><big>(</big><em>dest</em>, <em>nome</em>, <em>idx=''</em><big>)</big><a class="reference internal" href="_modules/dbquery.html#sysusers_process_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbquery.sysusers_process_csv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gera a lista da quantidade de usuarios logados e quantidade de processos do Host ordenado por data e hora e exibe o resultado em arquivo separado por virgulas (CSV).</p>
+<dd><p>Gera a lista da quantidade de usuarios logados e quantidade de processos do Host ordenado por data e hora e exibe o resultado em arquivo separado por virgulas (CSV).
+dest contem o diretorio fornecido para salvar o relatorio. Tem que fornecer o caminho absoluto.
+nome contem o nome do arquivo que sera criado.
+idx contem o indice do host, caso nao for fornecido sera retornado todos os hosts cadastrados.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbquery.sysusers_process_txt">
 <tt class="descclassname">dbquery.</tt><tt class="descname">sysusers_process_txt</tt><big>(</big><em>idx=''</em><big>)</big><a class="reference internal" href="_modules/dbquery.html#sysusers_process_txt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbquery.sysusers_process_txt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gera a lista da quantidade de usuarios logados e quantidade de processos do Host ordenado por data e hora e exibe o resultado em arquivo de texto.</p>
+<dd><p>Gera a lista da quantidade de usuarios logados e quantidade de processos do Host ordenado por data e hora e exibe o resultado em arquivo de texto.
+idx contem o indice do host, caso nao for fornecido sera retornado todos os hosts cadastrados.</p>
 </dd></dl>
 
 <span class="target" id="module-logs"></span><dl class="function">

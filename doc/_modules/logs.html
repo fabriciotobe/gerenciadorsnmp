@@ -52,50 +52,55 @@
 <span class="c">#!/usr/bin/env python</span>
 <span class="c">#coding: utf-8</span>
 
-<span class="c"># AUTOR: Fabricio Kelmer</span>
-<span class="c"># CONTATO: fabriciotobe@gmail.com</span>
-<span class="c"># DATA: 16 de Outubro de 2012</span>
+<span class="c"># @autor: Fabricio Kelmer</span>
+<span class="c"># @contato: fabriciotobe@gmail.com</span>
+<span class="c"># @data: 16 de Outubro de 2012</span>
 
 <span class="c"># Insere a entrada dos arquivos de logs.</span>
 
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 <span class="kn">from</span> <span class="nn">settings</span> <span class="kn">import</span> <span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">LOG_FOLDER</span>
 
+
 <div class="viewcode-block" id="logipscanner"><a class="viewcode-back" href="../codigo.html#logs.logipscanner">[docs]</a><span class="k">def</span> <span class="nf">logipscanner</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">tp</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; Registra o log do ipscanner.</span>
 <span class="sd">        l = Lista dos IPs</span>
 <span class="sd">        tp = tipo de log &#39;&#39;&#39;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;{0}{1}log_ipscanner.log&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">LOG_FOLDER</span><span class="p">),</span> <span class="s">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">flog</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">tp</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c"># Lista de Host que falharam no Ping</span>
+        <span class="k">if</span> <span class="n">tp</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c"># Lista de Host que falharam no Ping</span>
             <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
                 <span class="n">flog</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;PING FAIL at {0}: Host {1} offline or unreachable. Host ignored for SNMP service.</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">/%m/%Y %H:%M:%S&#39;</span><span class="p">),</span> <span class="n">ip</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="n">tp</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="c"># Lista de Host que tiveram sucesso no Ping</span>
+        <span class="k">elif</span> <span class="n">tp</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c"># Lista de Host que tiveram sucesso no Ping</span>
             <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
-                <span class="n">flog</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;PING SUCESS at {0}: Host {1} online.</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">/%m/%Y %H:%M:%S&#39;</span><span class="p">),</span> <span class="n">ip</span><span class="p">))</span>        
-        <span class="k">elif</span> <span class="n">tp</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span> <span class="c"># Lista de Host que falharam no Servico SNMP</span>
+                <span class="n">flog</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;PING SUCESS at {0}: Host {1} online.</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">/%m/%Y %H:%M:%S&#39;</span><span class="p">),</span> <span class="n">ip</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">tp</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>  <span class="c"># Lista de Host que falharam no Servico SNMP</span>
             <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
                 <span class="n">flog</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;SNMP FAIL at {0}: Host {1} online, but SNMP unable.</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">/%m/%Y %H:%M:%S&#39;</span><span class="p">),</span> <span class="n">ip</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="n">tp</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span> <span class="c"># Lista de Host que tiveram sucesso no Servico SNMP</span>
+        <span class="k">elif</span> <span class="n">tp</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>  <span class="c"># Lista de Host que tiveram sucesso no Servico SNMP</span>
             <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
                 <span class="n">flog</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;SNMP SUCESS at {0}: Host {1}-{2} online, but SNMP unable.</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">/%m/%Y %H:%M:%S&#39;</span><span class="p">),</span> <span class="n">ip</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ip</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
 </div>
 <div class="viewcode-block" id="logdbquery"><a class="viewcode-back" href="../codigo.html#logs.logdbquery">[docs]</a><span class="k">def</span> <span class="nf">logdbquery</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; Registra o log do dbquery</span>
 <span class="sd">    msg = mensagem do log &#39;&#39;&#39;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;{0}{1}log_dbquery.log&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">LOG_FOLDER</span><span class="p">),</span> <span class="s">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">flog</span><span class="p">:</span>
         <span class="n">flog</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;{0}: {1}</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">/%m/%Y %H:%M:%S&#39;</span><span class="p">),</span> <span class="n">msg</span><span class="p">))</span>
+
 </div>
 <div class="viewcode-block" id="logcollector"><a class="viewcode-back" href="../codigo.html#logs.logcollector">[docs]</a><span class="k">def</span> <span class="nf">logcollector</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; Registra o log do collector</span>
 <span class="sd">        msg = mensagem do log &#39;&#39;&#39;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;{0}{1}log_collector.log&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">LOG_FOLDER</span><span class="p">),</span> <span class="s">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">flog</span><span class="p">:</span>
         <span class="n">flog</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;{0}: {1}</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">/%m/%Y %H:%M:%S&#39;</span><span class="p">),</span> <span class="n">msg</span><span class="p">))</span>
+
 </div>
 <div class="viewcode-block" id="logdbmanager"><a class="viewcode-back" href="../codigo.html#logs.logdbmanager">[docs]</a><span class="k">def</span> <span class="nf">logdbmanager</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; Registra o log do dbmanager</span>
 <span class="sd">        msg = mensagem do log &#39;&#39;&#39;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;{0}{1}log_dbmanager.log&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">LOG_FOLDER</span><span class="p">),</span> <span class="s">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">flog</span><span class="p">:</span>
         <span class="n">flog</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s">&#39;{0}: {1}</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">/%m/%Y %H:%M:%S&#39;</span><span class="p">),</span> <span class="n">msg</span><span class="p">))</span>
+
 </div>
 <div class="viewcode-block" id="logsnmpget"><a class="viewcode-back" href="../codigo.html#logs.logsnmpget">[docs]</a><span class="k">def</span> <span class="nf">logsnmpget</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; Registra o log do snmpget</span>

@@ -52,32 +52,92 @@
 <span class="c">#!/usr/bin/env python</span>
 <span class="c">#coding: utf-8</span>
 
-<span class="c"># AUTOR: Fabricio Kelmer</span>
-<span class="c"># CONTATO: fabriciotobe@gmail.com</span>
-<span class="c"># DATA: 16 de Outubro de 2012</span>
+<span class="c"># @autor: Fabricio Kelmer</span>
+<span class="c"># @contato: fabriciotobe@gmail.com</span>
+<span class="c"># @data: 16 de Outubro de 2012</span>
 
+<span class="c"># O dbmanager manuseia todo do o Banco de Dados.</span>
 <span class="c"># Se o dbmanager for chamado diretamente ele imprime a lista de todos os Hosts cadastrados na tabela Hosts.</span>
 
 <span class="kn">import</span> <span class="nn">sqlite3</span>
 <span class="kn">from</span> <span class="nn">settings</span> <span class="kn">import</span> <span class="n">DB</span><span class="p">,</span> <span class="n">INSTALL_PATH</span>
 <span class="kn">from</span> <span class="nn">logs</span> <span class="kn">import</span> <span class="n">logdbmanager</span>
 
+
 <div class="viewcode-block" id="create_db"><a class="viewcode-back" href="../codigo.html#dbmanager.create_db">[docs]</a><span class="k">def</span> <span class="nf">create_db</span><span class="p">(</span><span class="n">db</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Cria o arquivo do Banco de Dados &#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39; Cria o arquivo do Banco de Dados vazio (sem tabelas).</span>
+<span class="sd">        E utilizado por padrao o caminho do Banco de Dados definidos no settings.py</span>
+<span class="sd">        As operacaoes de sucesso e falha sao inseridas no arquivo de log log_dbmanager &#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
+        <span class="c"># Apenas cria o arquivo do Banco de Dados vazio (sem tabelas)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">arq</span><span class="p">:</span>
             <span class="k">pass</span>
+
+        <span class="c"># Insere sucesso no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;SUCESSO, arquivo {0} do Banco de Dados criado.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">db</span><span class="p">))</span>
     <span class="k">except</span><span class="p">:</span>
+        <span class="c">#Insere falha no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;FALHA, nao e possivel criar o arquivo {0} do Banco de Dados.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">db</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Erro ao criar o arquivo do Banco de Dados.&#39;</span>
+
 </div>
 <div class="viewcode-block" id="create_tables_db"><a class="viewcode-back" href="../codigo.html#dbmanager.create_tables_db">[docs]</a><span class="k">def</span> <span class="nf">create_tables_db</span><span class="p">(</span><span class="n">db</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Cria as tabelas no Banco de dados</span>
-<span class="sd">        db: Banco de Dados &#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39; Cria as tabelas no Banco de dados.</span>
+<span class="sd">        O Banco de Dados utilizando e o definido no settings.py</span>
+
+<span class="sd">        - Tabelas:</span>
+
+<span class="sd">          - Hosts - Tabela que contem os Hosts cadastrados.</span>
+<span class="sd">            Campos:</span>
+<span class="sd">            id: identificador automatico.</span>
+<span class="sd">            ip: ip do host.</span>
+<span class="sd">            hostname: nome do host.</span>
+
+<span class="sd">          - Group1 - Tabela que armazena as informacoes do Grupo 1.</span>
+<span class="sd">            Campos:</span>
+<span class="sd">            id: identificados automatico</span>
+<span class="sd">            idhost: id do host</span>
+<span class="sd">            sysDescr: descricao do sistema, contem sistema operacional, distribuicao, processador, arquitetura, data e hora.</span>
+<span class="sd">            sysUpTime: tempo que o sistema esta ligado.</span>
+<span class="sd">            sysContact: contato do sistema.</span>
+<span class="sd">            sysLocation: local do sistema.</span>
+<span class="sd">            sysServices: servicos do sistema.</span>
+<span class="sd">            data: Data da coleta.</span>
+<span class="sd">            hora: Hora da coleta.</span>
+
+<span class="sd">          -Group2 - Tabela que armazena as informacoes do Grupo 2</span>
+<span class="sd">            Campos:</span>
+<span class="sd">            id: identificador automatico.</span>
+<span class="sd">            idhost: id do host.</span>
+<span class="sd">            hrSystemUsers: usuarios logados.</span>
+<span class="sd">            hrSystemProcess: total de processos rodando.</span>
+<span class="sd">            data: data da coleta.</span>
+<span class="sd">            hora: horario da coleta.</span>
+
+<span class="sd">          - Group3 - Tabela que armazena as informacoes do Grupo 3</span>
+<span class="sd">            Campos:</span>
+<span class="sd">            id: identificador automatico.</span>
+<span class="sd">            idhost: id do host.</span>
+<span class="sd">            Memory: memoria do sistema.</span>
+<span class="sd">            hrStorageDescr: descricao da unidade de armazenamento.</span>
+<span class="sd">            hrStorageSize: tamanho da unidade de armazenamento.</span>
+<span class="sd">            hrStorageUsed: espaco usado na unidade de armazenamento.</span>
+<span class="sd">            data: Data da coleta.</span>
+<span class="sd">            hora: horario da coleta.</span>
+
+<span class="sd">          - Group6 - Tabela que armazena as informacoes do Grupo 6</span>
+<span class="sd">            Campos:</span>
+<span class="sd">            id: identificador automatico.</span>
+<span class="sd">            idhost: id do host.</span>
+<span class="sd">            ipAdEntAddr: enderecos de ip separados por &quot;|&quot;.</span>
+<span class="sd">            ipAdEntifIndex: identificador da interface de rede do host separados por &quot;|&quot;.</span>
+<span class="sd">            ipAdEndNetMask: mascara de rede separados por &quot;|&quot;</span>
+<span class="sd">          &#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="c"># Inicia a criacao das tabelas no Banco de Dados.</span>
         <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;CREATE TABLE Hosts(id INTEGER PRIMARY KEY, ip TEXT, hostname TEXT)&quot;</span><span class="p">)</span>
         <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;CREATE TABLE Group1(id INTEGER PRIMARY KEY, idhost INTEGER, sysDescr TEXT, sysUpTime TEXT, sysContact TEXT, sysLocation TEXT, sysServices TEXT, data DATETIME, hora TEXT)&quot;</span><span class="p">)</span>
         <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;CREATE TABLE Group2(id INTEGER PRIMARY KEY, idhost INTEGER, hrSystemUsers TEXT, hrSystemProcess TEXT, data DATETIME, hora TEXT)&quot;</span><span class="p">)</span>
@@ -87,17 +147,24 @@
         <span class="n">con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
         <span class="n">c</span><span class="o">.</span><span class="n">close</span>
         <span class="n">con</span><span class="o">.</span><span class="n">close</span>
+
+        <span class="c"># Insere sucesso no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;SUCESSO, Tabelas criadas no Banco de Dados {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">db</span><span class="p">))</span>
     <span class="k">except</span><span class="p">:</span>
+        <span class="c"># Insere falha no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;FALHA, nao e possivel criar as tabelas no Banco de Dados {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">db</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Erro ao criar tabelas no Banco de Dados.&#39;</span>
+
 </div>
 <div class="viewcode-block" id="drop_tables_db"><a class="viewcode-back" href="../codigo.html#dbmanager.drop_tables_db">[docs]</a><span class="k">def</span> <span class="nf">drop_tables_db</span><span class="p">(</span><span class="n">db</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Exclui as tabelas do Banco de Dados</span>
-<span class="sd">        dp: Banco de Dados &#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39; Exclui as tabelas do Banco de Dados.</span>
+<span class="sd">        O Banco de Dados utilizando e o definido no settings.py.</span>
+<span class="sd">         &#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="c"># Comandos de exclusao de tabela</span>
         <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;DROP TABLE Hosts&quot;</span><span class="p">)</span>
         <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;DROP TABLE Group1&quot;</span><span class="p">)</span>
         <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;DROP TABLE Group2&quot;</span><span class="p">)</span>
@@ -107,265 +174,386 @@
         <span class="k">print</span> <span class="s">&#39;Tabelas do Banco de dados deletadas com sucesso.&#39;</span>
         <span class="n">c</span><span class="o">.</span><span class="n">close</span>
         <span class="n">con</span><span class="o">.</span><span class="n">close</span>
+
+        <span class="c"># Insere sucesso no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;SUCESSO, Tabelas excluidas do Banco de Dados {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">db</span><span class="p">))</span>
     <span class="k">except</span><span class="p">:</span>
+        <span class="c"># Insere falha no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;FALHA, nao e possivel excluir tabelas do Banco de Dados {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">db</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Erro ao deletar tabelas do Banco de Dados.&#39;</span>
+
 </div>
 <div class="viewcode-block" id="reg_hosts_db"><a class="viewcode-back" href="../codigo.html#dbmanager.reg_hosts_db">[docs]</a><span class="k">def</span> <span class="nf">reg_hosts_db</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">hosts_list</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Grava no Banco de Dados na tabela Hosts </span>
-<span class="sd">        db: Banco de Dados</span>
-<span class="sd">        hosts_list: Lista de tuplas com ips e nomes de host &#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39; Insere informacoes no Banco de Dados na tabela Hosts.</span>
+<span class="sd">        O Banco de Dados utilizando e o definido no settings.py.</span>
+<span class="sd">        hosts_list contem uma lista de tuplas com ips e nomes de host no formato [(ip, nomedohost), (ip, nomedohost), ...]</span>
+<span class="sd">        &#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="c"># Executa no comando INSERT para cada host da lista.</span>
         <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">hosts_list</span><span class="p">:</span>
             <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;INSERT INTO Hosts VALUES(NULL, &#39;{0}&#39;, &#39;{1}&#39;)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+            <span class="c"># Insere sucesso no log</span>
             <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;SUCESSO ao inserir Host {0} - {1} no Banco de Dados {2}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">db</span><span class="p">))</span>
             <span class="k">print</span> <span class="s">&#39;Host {0} - {1} inserido no Banco de Dados com sucesso.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
         <span class="n">c</span><span class="o">.</span><span class="n">close</span>
         <span class="n">con</span><span class="o">.</span><span class="n">close</span>
     <span class="k">except</span><span class="p">:</span>
+        <span class="c"># Insere falha no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;FALHA, nao e possivel inserir Hosts no Banco de Dados {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">db</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Erro ao inserir hosts no Banco de Dados.&#39;</span>
+
 </div>
 <div class="viewcode-block" id="del_hosts_db"><a class="viewcode-back" href="../codigo.html#dbmanager.del_hosts_db">[docs]</a><span class="k">def</span> <span class="nf">del_hosts_db</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">hosts_list</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Exclui hosts do Banco de Dados </span>
-<span class="sd">        db: Banco de Dados</span>
-<span class="sd">        hosts_list: Lista de tuplas com ips e nomes de host &#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39; Exclui hosts do Banco de Dados na tabela Hosts.</span>
+<span class="sd">        O Banco de Dados utilizando e o definido no settings.py.</span>
+<span class="sd">        hosts_list contem uma lista de tuplas com ips e nomes de host no formato [(ip, nomedohost), (ip, nomedohost), ...]. Pode ser passado uma lista, mas na chamada interna do programa manager e passado uma lista com uma tupla apenas.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="c"># Executa o comando DELETE para cada host da lista</span>
         <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">hosts_list</span><span class="p">:</span>
             <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;DELETE FROM Hosts WHERE ip = &#39;{0}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+            <span class="c"># Insere sucesso no log</span>
             <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;SUCESSO ao excluir Host {0} - {1} do Banco de Dados {2}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">db</span><span class="p">))</span>
             <span class="k">print</span> <span class="s">&#39;Host {0} - {1} excluido do Banco de Dados com sucesso.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
         <span class="n">c</span><span class="o">.</span><span class="n">close</span>
         <span class="n">con</span><span class="o">.</span><span class="n">close</span>
     <span class="k">except</span><span class="p">:</span>
+        <span class="c"># Insere falha no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;FALHA, nao e possivel excluir Hosts do Banco de Dados {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">db</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Erro ao excluir hosts do Banco de Dados.&#39;</span>
+
 </div>
 <div class="viewcode-block" id="reg_query_db"><a class="viewcode-back" href="../codigo.html#dbmanager.reg_query_db">[docs]</a><span class="k">def</span> <span class="nf">reg_query_db</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">hosts_list</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Recebe uma lista e consulta a tabela de Hosts, verifica os hosts cadastrados e retorna os hosts que nao existem na tabela.</span>
-<span class="sd">        db: Banco de Dados</span>
-<span class="sd">        hosts_list: Lista de tupla contendo ips e nomes de hosts. &#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39; Recebe uma lista de hosts, executa um SELECT na tabela hosts e retorna uma lista com os IPs que nao existem na tabela Hosts.</span>
+<span class="sd">        O Banco de Dados utilizando e o definido no settings.py.</span>
+<span class="sd">        hosts_list contem lista de IPs. &#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
         <span class="n">l</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">ip</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+
+        <span class="c"># Salva a lista de hosts em uma segunda lista</span>
+        <span class="c"># Cria uma copia da lista</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">hosts_list</span><span class="p">:</span>
             <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
+            <span class="c"># Passa um a um os hosts</span>
             <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">hosts_list</span><span class="p">:</span>
+                <span class="c"># Executa um SELECT no host para checar se ele esta cadastrado na tabela Hosts</span>
                 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SELECT * FROM Hosts WHERE ip = &#39;{0}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+
+                    <span class="c"># Quando encontrado registro, salva o ip em uma variavel</span>
                     <span class="n">ip</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+                <span class="c"># Verifica se foi localizado um cadastro do host</span>
                 <span class="k">if</span> <span class="n">ip</span><span class="p">:</span>
+                    <span class="c"># Insere uma entrada informando que o host sera ignorado para cadastro</span>
                     <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;IGNORADO, {0} ja esta cadastrado no Banco de Dados {1}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">db</span><span class="p">))</span>
                     <span class="k">print</span> <span class="s">&#39;{0} ja esta cadastrado, novo registro ignorado.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span>
+
+                    <span class="c"># Remove o hosts localizado da lista secundaria</span>
                     <span class="n">l</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
                     <span class="k">del</span> <span class="n">ip</span>
         <span class="k">except</span><span class="p">:</span>
-           <span class="k">pass</span>
+            <span class="k">pass</span>
         <span class="n">c</span><span class="o">.</span><span class="n">close</span>
         <span class="n">con</span><span class="o">.</span><span class="n">close</span>
     <span class="k">except</span><span class="p">:</span>
+        <span class="c"># Insere falha no log, caso nao seja possivel consultar</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;FALHA, nao e possivel verificar hosts cadastrados no Banco de Dados {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">db</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Erro ao verificar Hosts cadastrados.&#39;</span>
+
+    <span class="c"># Retorna a lista dos nao cadastrados</span>
     <span class="k">return</span> <span class="n">l</span>
+
 </div>
 <div class="viewcode-block" id="alter_host_db"><a class="viewcode-back" href="../codigo.html#dbmanager.alter_host_db">[docs]</a><span class="k">def</span> <span class="nf">alter_host_db</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">hosts_list</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Altera os dados de um Host fornecido</span>
-<span class="sd">        db: Banco de Dados</span>
-<span class="sd">        hosts_lists: tupla com ip e nome do host &#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39; Altera os dados de um Host fornecido.</span>
+<span class="sd">        O Banco de Dados utilizando e o definido no settings.py.</span>
+<span class="sd">        hosts_lists contem uma tupla com ip e nome do host no formato [(ip, nomedohost), (ip, nomedohost), ...]. E fornecido apenas um host por vez. &#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="c"># Executa um SELECT buscando o cadatro do Host</span>
         <span class="n">query</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SELECT * FROM Hosts WHERE ip = &#39;{0}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hosts_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+        <span class="c"># for convocado apenas para pegar as informacoes contidas antigas para inserir no log</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
+            <span class="c"># Executa uma UPDATE no host, atualizando as informacoes</span>
             <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;UPDATE Hosts SET ip = &#39;{0}&#39;, hostname = &#39;{1}&#39; WHERE ip = &#39;{0}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hosts_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
-            <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;SUCESSO, Host {0} - {1} alterado no Banco de Dados. {2}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hosts_list</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">db</span><span class="p">))</span>
+
+            <span class="c"># Insere sucesso no log</span>
+            <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;SUCESSO, Host {0} - {1} alterado no Banco de Dados {2}. IP anterior: {3}, Nome anterior: {4}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hosts_list</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">db</span><span class="p">,</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
             <span class="k">print</span> <span class="s">&#39;Host {0} - {1} alterado no Banco de Dados com sucesso.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hosts_list</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
         <span class="n">c</span><span class="o">.</span><span class="n">close</span>
         <span class="n">con</span><span class="o">.</span><span class="n">close</span>
     <span class="k">except</span><span class="p">:</span>
+        <span class="c"># Insere falha no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;FALHA, nao e possivel alterar hosts no Banco de Dados {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">db</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Falha ao alterar dados no Banco de Dados.&#39;</span>
+
 </div>
-<div class="viewcode-block" id="query_hosts_db"><a class="viewcode-back" href="../codigo.html#dbmanager.query_hosts_db">[docs]</a><span class="k">def</span> <span class="nf">query_hosts_db</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">idx</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Executa um select na tabela de Hosts e retorna a lista de Hosts (id e ip) </span>
-<span class="sd">        db = Banco de Dados</span>
-<span class="sd">        idx = ID do Host, se fornecido, executa a consulta somente daquele host &#39;&#39;&#39;</span>
+<div class="viewcode-block" id="query_hosts_db"><a class="viewcode-back" href="../codigo.html#dbmanager.query_hosts_db">[docs]</a><span class="k">def</span> <span class="nf">query_hosts_db</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Executa um SELECT na tabela de Hosts e retorna a lista de tupla de Hosts no formato [(id, ip, hostname), (id, ip, hostname), ...].</span>
+<span class="sd">        O Banco de Dados utilizando e o definido no settings.py.</span>
+<span class="sd">        idx contem um id de Host, se fornecido, executa a consulta somente daquele host. Padrao e vazio, que determina a consulta de todos os hosts. &#39;&#39;&#39;</span>
     <span class="n">l</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">w</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+
+        <span class="c"># Verifica se a variavel idx tem valor, se tiver adiciona a clausula WHERE id = idx na consulta</span>
         <span class="k">if</span> <span class="n">idx</span><span class="p">:</span>
             <span class="n">w</span> <span class="o">=</span> <span class="s">&#39; WHERE id = {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
         <span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="c"># Executa a consulta</span>
         <span class="n">query</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SELECT * FROM Hosts{0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
+
+        <span class="c"># Percorre o resultado da consulta inserindo o resultado em uma lista de tuplas</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
             <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
         <span class="n">con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
         <span class="n">c</span><span class="o">.</span><span class="n">close</span>
         <span class="n">con</span><span class="o">.</span><span class="n">close</span>
+
+        <span class="c"># Inserer sucesso no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;SUCESSO, lista de hosts gerada.&#39;</span><span class="p">)</span>
+
+        <span class="c"># Retorna a lista com hosts</span>
         <span class="k">return</span> <span class="n">l</span>
     <span class="k">except</span><span class="p">:</span>
+        <span class="c"># Inserer falha no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;FALHA, nao e possivel gerar a lista de Hosts cadastrado no Banco de Dados {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">db</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Falha ao gerar lista de Hosts cadastrados no Banco de Dados.&#39;</span>
+
+        <span class="c"># Retorna a lista vazia</span>
         <span class="k">return</span> <span class="n">l</span>
-    </div>
+
+</div>
 <div class="viewcode-block" id="reg_group1_db"><a class="viewcode-back" href="../codigo.html#dbmanager.reg_group1_db">[docs]</a><span class="k">def</span> <span class="nf">reg_group1_db</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">hosts_list</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Grava do Dados do Grupo 1 no Banco de Dados </span>
-<span class="sd">        db = Banco de Dados</span>
-<span class="sd">        hosts_list = Lista com {0}idhost, {2}sysDescr, {3}sysUpTime, {4}sysContact, {5}sysLocation, {6}sysServices, {7}data, {8}hora &#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39; Grava do Dados do Grupo 1 no Banco de Dados.</span>
+<span class="sd">        O Banco de Dados utilizando e o definido no settings.py.</span>
+<span class="sd">        hosts_list contem uma lista com idhost, sysDescr, sysUpTime, sysContact, sysLocation, sysServices, data e hora.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="c"># Executa o INSERT na tabela Group1</span>
+        <span class="c"># {0}idhost, {2}sysDescr, {3}sysUpTime, {4}sysContact, {5}sysLocation, {6}sysServices, {7}data, {8}hora</span>
         <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;INSERT INTO Group1 VALUES(NULL, {0}, &#39;{1}&#39;, &#39;{2}&#39;, &#39;{3}&#39;, &#39;{4}&#39;, &#39;{5}&#39;, &#39;{6}&#39;, &#39;{7}&#39;)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hosts_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">8</span><span class="p">]))</span>
+
+        <span class="c"># Insere sucesso no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;SUCESSO, Grupo 1 do Host id {0}, ip {1} inserido no Banco de Dados {2}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hosts_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">db</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Grupo 1 do Host id {0}, ip {1} inserido no Banco de Dados com sucesso.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hosts_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
         <span class="n">c</span><span class="o">.</span><span class="n">close</span>
         <span class="n">con</span><span class="o">.</span><span class="n">close</span>
     <span class="k">except</span><span class="p">:</span>
+        <span class="c"># Insere falha no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;FALHA, nao e possivel inserir dados no Grupo 1 no Banco de Dados {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">db</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Erro ao inserir hosts no Banco de Dados.&#39;</span>
+
 </div>
 <div class="viewcode-block" id="query_group1_db"><a class="viewcode-back" href="../codigo.html#dbmanager.query_group1_db">[docs]</a><span class="k">def</span> <span class="nf">query_group1_db</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">idhost</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Executa um select na tabela de Group1 e retorna todos os dados da ultima consulta automatica do ID fornecido </span>
-<span class="sd">        db = Banco de Dados</span>
-<span class="sd">        idhost = ID do host consultador&#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39; Executa um SELECT na tabela de Group1 e retorna todos os dados das consulta automatica do ID fornecido.</span>
+<span class="sd">        O Banco de Dados utilizando e o definido no settings.py.</span>
+<span class="sd">        idhost contem o ID do host consultado.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="c"># Executa um SELECT na tabela Group1 para o host idhost</span>
         <span class="n">query</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SELECT * FROM Group1 WHERE idhost = {0} ORDER BY id DESC&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idhost</span><span class="p">))</span>
+
+        <span class="c"># Percorre todos os resultados da consulta e armazena em uma lista no formato de tupla</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
             <span class="n">l</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
+
+            <span class="c"># Sai do for, para o Grupo 1, somente a ultima informacao e relevante</span>
             <span class="k">break</span>
         <span class="n">con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
         <span class="n">c</span><span class="o">.</span><span class="n">close</span>
         <span class="n">con</span><span class="o">.</span><span class="n">close</span>
+
+        <span class="c"># Insere sucesso no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;SUCESSO, Listagem do Grupo 1 gerada.&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">l</span>
     <span class="k">except</span><span class="p">:</span>
-       <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;FALHA ao gerar dados do Grupo 1 para o ID {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idhost</span><span class="p">))</span>
-       <span class="k">print</span> <span class="s">&#39;Falha ao gerar dados do Grupo 1 para o ID {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idhost</span><span class="p">)</span>
+       <span class="c"># Insere falha no log</span>
+        <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;FALHA ao gerar dados do Grupo 1 para o ID {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idhost</span><span class="p">))</span>
+        <span class="k">print</span> <span class="s">&#39;Falha ao gerar dados do Grupo 1 para o ID {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idhost</span><span class="p">)</span>
+
 </div>
 <div class="viewcode-block" id="reg_group2_db"><a class="viewcode-back" href="../codigo.html#dbmanager.reg_group2_db">[docs]</a><span class="k">def</span> <span class="nf">reg_group2_db</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">hosts_list</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Grava do Dados do Grupo 2 no Banco de Dados </span>
-<span class="sd">        db = Banco de Dados</span>
-<span class="sd">        hosts_list = Lista com {0}idhost, {2}hrSystemUsers, {3}hrSystemProcess, {4}data, {5}hora &#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39; Grava do Dados do Grupo 2 no Banco de Dados.</span>
+<span class="sd">        O Banco de Dados utilizando e o definido no settings.py.</span>
+<span class="sd">        hosts_list conte uma lista com idhost, hrSystemUsers, hrSystemProcess, data e hora.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="c"># Executa um INSERT na tabela Group2</span>
+        <span class="c"># {0}idhost, {2}hrSystemUsers, {3}hrSystemProcess, {4}data, {5}hora</span>
         <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;INSERT INTO Group2 VALUES(NULL, {0}, &#39;{1}&#39;, &#39;{2}&#39;, &#39;{3}&#39;, &#39;{4}&#39;)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hosts_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">5</span><span class="p">]))</span>
+
+        <span class="c"># Insere sucesso no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;SUCESSO, Grupo 2 do Host id {0}, ip {1} inserido no Banco de Dados {2}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hosts_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">db</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Grupo 2 do Host id {0}, ip {1} inserido no Banco de Dados com sucesso.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hosts_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
         <span class="n">c</span><span class="o">.</span><span class="n">close</span>
         <span class="n">con</span><span class="o">.</span><span class="n">close</span>
     <span class="k">except</span><span class="p">:</span>
+        <span class="c"># Insere falha no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;FALHA, nao e possivel inserir dados no Grupo 2 no Banco de Dados {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">db</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Erro ao inserir hosts no Banco de Dados.&#39;</span>
+
 </div>
 <div class="viewcode-block" id="query_group2_db"><a class="viewcode-back" href="../codigo.html#dbmanager.query_group2_db">[docs]</a><span class="k">def</span> <span class="nf">query_group2_db</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">idhost</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Executa um select na tabela de Group2 e retorna uma lista com todos os dados da consulta automatica do ID fornecido </span>
-<span class="sd">        db = Banco de Dados</span>
-<span class="sd">        idhost = ID do host consultado &#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39; Executa um SELECT na tabela de Group2 e retorna uma lista com todos os dados das consulta automatica do ID fornecido.</span>
+<span class="sd">        O Banco de Dados utilizando e o definido no settings.py.</span>
+<span class="sd">        idhost contem o ID do host consultado.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">l</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="c"># Executa um SELECT na tabela Group2 para o host idhost</span>
         <span class="n">query</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SELECT * FROM Group2 WHERE idhost = {0} ORDER BY data, hora&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idhost</span><span class="p">))</span>
+
+        <span class="c"># Percorre todos os resultados da consulta e armazena em uma lista no formato de tupla</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
             <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="n">con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
         <span class="n">c</span><span class="o">.</span><span class="n">close</span>
         <span class="n">con</span><span class="o">.</span><span class="n">close</span>
+
+        <span class="c"># Insere sucesso no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;SUCESSO, Listagem do Grupo 2 gerada.&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">l</span>
     <span class="k">except</span><span class="p">:</span>
-       <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;FALHA ao gerar dados do Grupo 2 para o ID {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idhost</span><span class="p">))</span>
-       <span class="k">print</span> <span class="s">&#39;Falha ao gerar dados do Grupo 2 para o ID {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idhost</span><span class="p">)</span>
+       <span class="c"># Insere falha no log</span>
+        <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;FALHA ao gerar dados do Grupo 2 para o ID {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idhost</span><span class="p">))</span>
+        <span class="k">print</span> <span class="s">&#39;Falha ao gerar dados do Grupo 2 para o ID {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idhost</span><span class="p">)</span>
+
 </div>
 <div class="viewcode-block" id="reg_group3_db"><a class="viewcode-back" href="../codigo.html#dbmanager.reg_group3_db">[docs]</a><span class="k">def</span> <span class="nf">reg_group3_db</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">hosts_list</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Grava do Dados do Grupo 3 no Banco de Dados </span>
-<span class="sd">        db = Banco de Dados</span>
-<span class="sd">        hosts_list = Lista com {0}idhost, {2}Memory, {3}hrStorageDescr, {4}hrStorageSize, {5}hrStorageUsed, {6}data, {7}hora &#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39; Grava do Dados do Grupo 3 no Banco de Dados.</span>
+<span class="sd">        O Banco de Dados utilizando e o definido no settings.py.</span>
+<span class="sd">        hosts_list contem a lista com idhost, Memory, hrStorageDescr, hrStorageSize, hrStorageUsed, data e hora &#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="c"># Executa um INSERT na tabela Group3</span>
+        <span class="c"># {0}idhost, {2}Memory, {3}hrStorageDescr, {4}hrStorageSize, {5}hrStorageUsed, {6}data, {7}hora</span>
         <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;INSERT INTO Group3 VALUES(NULL, {0}, &#39;{1}&#39;, &#39;{2}&#39;, &#39;{3}&#39;, &#39;{4}&#39;, &#39;{5}&#39;, &#39;{6}&#39;)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hosts_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">7</span><span class="p">]))</span>
+
+        <span class="c"># Insere sucesso no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;SUCESSO, Grupo 3 do Host id {0}, ip {1} inserido no Banco de Dados {2}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hosts_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">db</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Grupo 3 do Host id {0}, ip {1} inserido no Banco de Dados com sucesso.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hosts_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
         <span class="n">c</span><span class="o">.</span><span class="n">close</span>
         <span class="n">con</span><span class="o">.</span><span class="n">close</span>
     <span class="k">except</span><span class="p">:</span>
+        <span class="c"># Insere falha no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;FALHA, nao e possivel inserir dados no Grupo 3 no Banco de Dados {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">db</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Erro ao inserir hosts no Banco de Dados.&#39;</span>
+
 </div>
 <div class="viewcode-block" id="query_group3_db"><a class="viewcode-back" href="../codigo.html#dbmanager.query_group3_db">[docs]</a><span class="k">def</span> <span class="nf">query_group3_db</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">idhost</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; Executa um select na tabela de Group3 e retorna uma lista com todos os dados da consulta automatica do ID fornecido</span>
-<span class="sd">        db = Banco de Dados</span>
-<span class="sd">        idhost = ID do host consultado &#39;&#39;&#39;</span>
+<span class="sd">        O Banco de Dados utilizando e o definido no settings.py.</span>
+<span class="sd">        idhost contem o ID do host consultado. &#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">l</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="c"># Executa um SELECT na tabela Group3 para o host idhost</span>
         <span class="n">query</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SELECT * FROM Group3 WHERE idhost = {0} ORDER BY data, hora&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idhost</span><span class="p">))</span>
+
+        <span class="c"># Percorre todos os resultados da consulta e armazena em uma lista no formato de tupla</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
             <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="n">con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
         <span class="n">c</span><span class="o">.</span><span class="n">close</span>
         <span class="n">con</span><span class="o">.</span><span class="n">close</span>
+
+        <span class="c"># Insere sucesso no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;SUCESSO, Listagem do Grupo 3 gerada.&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">l</span>
     <span class="k">except</span><span class="p">:</span>
+        <span class="c"># Insere falha no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;FALHA ao gerar dados do Grupo 3 para o ID {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idhost</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Falha ao gerar dados do Grupo 3 para o ID {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idhost</span><span class="p">)</span>
 
 </div>
 <div class="viewcode-block" id="reg_group6_db"><a class="viewcode-back" href="../codigo.html#dbmanager.reg_group6_db">[docs]</a><span class="k">def</span> <span class="nf">reg_group6_db</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">hosts_list</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Grava do Dados do Grupo 6 no Banco de Dados </span>
-<span class="sd">        db = Banco de Dados</span>
-<span class="sd">        hosts_list = Lista com {0}idhost, {2}ipAdEntAddr, {3}ipAdEntifIndex, {4}ipAdEndNetMask &#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39; Grava do Dados do Grupo 6 no Banco de Dados.</span>
+<span class="sd">        O Banco de Dados utilizando e o definido no settings.py.</span>
+<span class="sd">        hosts_list contem uma lista com idhost, ipAdEntAddr, ipAdEntifIndex e ipAdEndNetMask &#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="c"># Executa um INSERT na tabela Group3</span>
+        <span class="c"># {0}idhost, {2}ipAdEntAddr, {3}ipAdEntifIndex, {4}ipAdEndNetMask</span>
         <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;INSERT INTO Group6 VALUES(NULL, {0}, &#39;{1}&#39;, &#39;{2}&#39;, &#39;{3}&#39;, &#39;{4}&#39;, &#39;{5}&#39;)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hosts_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">6</span><span class="p">]))</span>
+
+        <span class="c"># Insere sucesso no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;SUCESSO, Grupo 6 do Host id {0}, ip {1} inserido no Banco de Dados {2}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hosts_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">db</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Grupo 6 do Host id {0}, ip {1} inserido no Banco de Dados com sucesso.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hosts_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">hosts_list</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
         <span class="n">c</span><span class="o">.</span><span class="n">close</span>
         <span class="n">con</span><span class="o">.</span><span class="n">close</span>
     <span class="k">except</span><span class="p">:</span>
+        <span class="c"># Insere falha no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;FALHA, nao e possivel inserir dados no Grupo 6 no Banco de Dados {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">db</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Erro ao inserir hosts no Banco de Dados.&#39;</span>
+
 </div>
 <div class="viewcode-block" id="query_group6_db"><a class="viewcode-back" href="../codigo.html#dbmanager.query_group6_db">[docs]</a><span class="k">def</span> <span class="nf">query_group6_db</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">idhost</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Executa um select na tabela de Group6 e retorna uma lista com todos os dados da consulta automatica do ID fornecido</span>
-<span class="sd">        db = Banco de Dados</span>
+    <span class="sd">&#39;&#39;&#39; Executa um select na tabela de Group6 e retorna uma lista com todos os dados da consulta automatica do ID fornecido.</span>
+<span class="sd">        O Banco de Dados utilizando e o definido no settings.py.</span>
 <span class="sd">        idhost = ID do host consultado &#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">l</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="c"># Executa um SELECT na tabela Group6 para o host idhost</span>
         <span class="n">query</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SELECT * FROM Group6 WHERE idhost = {0} ORDER BY data, hora&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idhost</span><span class="p">))</span>
+
+        <span class="c"># Percorre todos os resultados da consulta e armazena em uma lista no formato de tupla</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
             <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="n">con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
         <span class="n">c</span><span class="o">.</span><span class="n">close</span>
         <span class="n">con</span><span class="o">.</span><span class="n">close</span>
+
+        <span class="c"># Insere sucesso no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;SUCESSO, Listagem do Grupo 6 gerada.&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">l</span>
     <span class="k">except</span><span class="p">:</span>
+        <span class="c"># Insere falha no log</span>
         <span class="n">logdbmanager</span><span class="p">(</span><span class="s">&#39;FALHA ao gerar dados do Grupo 6 para o ID {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idhost</span><span class="p">))</span>
         <span class="k">print</span> <span class="s">&#39;Falha ao gerar dados do Grupo 6 para o ID {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idhost</span><span class="p">)</span>
 </div>

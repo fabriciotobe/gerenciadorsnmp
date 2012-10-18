@@ -18,4 +18,3 @@ Documentacao dos Modulos e Codigo Fonte
 
 .. automodule:: settings
    :members:
-
