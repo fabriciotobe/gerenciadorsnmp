@@ -1,0 +1,393 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Documentacao dos Modulos e Codigo Fonte &mdash; Gerenciador SNMP 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Gerenciador SNMP 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="Notas do Autor" href="notas.html" />
+    <link rel="prev" title="Grupos Coletados" href="coleta.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="notas.html" title="Notas do Autor"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="coleta.html" title="Grupos Coletados"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Gerenciador SNMP 0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-collector">
+<span id="documentacao-dos-modulos-e-codigo-fonte"></span><h1>Documentacao dos Modulos e Codigo Fonte<a class="headerlink" href="#module-collector" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="collector.collector">
+<tt class="descclassname">collector.</tt><tt class="descname">collector</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/collector.html#collector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#collector.collector" title="Permalink to this definition">¶</a></dt>
+<dd><p>O coletor coleta a informacao de todos os hosts cadastrados na tabela Hosts e armazena no Banco de Dados.</p>
+</dd></dl>
+
+<span class="target" id="module-dbmanager"></span><dl class="function">
+<dt id="dbmanager.alter_host_db">
+<tt class="descclassname">dbmanager.</tt><tt class="descname">alter_host_db</tt><big>(</big><em>db</em>, <em>hosts_list</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#alter_host_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.alter_host_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Altera os dados de um Host fornecido
+db: Banco de Dados
+hosts_lists: tupla com ip e nome do host</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbmanager.create_db">
+<tt class="descclassname">dbmanager.</tt><tt class="descname">create_db</tt><big>(</big><em>db</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#create_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.create_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cria o arquivo do Banco de Dados</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbmanager.create_tables_db">
+<tt class="descclassname">dbmanager.</tt><tt class="descname">create_tables_db</tt><big>(</big><em>db</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#create_tables_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.create_tables_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cria as tabelas no Banco de dados
+db: Banco de Dados</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbmanager.del_hosts_db">
+<tt class="descclassname">dbmanager.</tt><tt class="descname">del_hosts_db</tt><big>(</big><em>db</em>, <em>hosts_list</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#del_hosts_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.del_hosts_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exclui hosts do Banco de Dados 
+db: Banco de Dados
+hosts_list: Lista de tuplas com ips e nomes de host</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbmanager.drop_tables_db">
+<tt class="descclassname">dbmanager.</tt><tt class="descname">drop_tables_db</tt><big>(</big><em>db</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#drop_tables_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.drop_tables_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exclui as tabelas do Banco de Dados
+dp: Banco de Dados</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbmanager.query_group1_db">
+<tt class="descclassname">dbmanager.</tt><tt class="descname">query_group1_db</tt><big>(</big><em>db</em>, <em>idhost</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#query_group1_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.query_group1_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executa um select na tabela de Group1 e retorna todos os dados da ultima consulta automatica do ID fornecido 
+db = Banco de Dados
+idhost = ID do host consultador</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbmanager.query_group2_db">
+<tt class="descclassname">dbmanager.</tt><tt class="descname">query_group2_db</tt><big>(</big><em>db</em>, <em>idhost</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#query_group2_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.query_group2_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executa um select na tabela de Group2 e retorna uma lista com todos os dados da consulta automatica do ID fornecido 
+db = Banco de Dados
+idhost = ID do host consultado</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbmanager.query_group3_db">
+<tt class="descclassname">dbmanager.</tt><tt class="descname">query_group3_db</tt><big>(</big><em>db</em>, <em>idhost</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#query_group3_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.query_group3_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executa um select na tabela de Group3 e retorna uma lista com todos os dados da consulta automatica do ID fornecido
+db = Banco de Dados
+idhost = ID do host consultado</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbmanager.query_group6_db">
+<tt class="descclassname">dbmanager.</tt><tt class="descname">query_group6_db</tt><big>(</big><em>db</em>, <em>idhost</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#query_group6_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.query_group6_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executa um select na tabela de Group6 e retorna uma lista com todos os dados da consulta automatica do ID fornecido
+db = Banco de Dados
+idhost = ID do host consultado</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbmanager.query_hosts_db">
+<tt class="descclassname">dbmanager.</tt><tt class="descname">query_hosts_db</tt><big>(</big><em>db</em>, <em>idx=''</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#query_hosts_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.query_hosts_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executa um select na tabela de Hosts e retorna a lista de Hosts (id e ip) 
+db = Banco de Dados
+idx = ID do Host, se fornecido, executa a consulta somente daquele host</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbmanager.reg_group1_db">
+<tt class="descclassname">dbmanager.</tt><tt class="descname">reg_group1_db</tt><big>(</big><em>db</em>, <em>hosts_list</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#reg_group1_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.reg_group1_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grava do Dados do Grupo 1 no Banco de Dados 
+db = Banco de Dados
+hosts_list = Lista com {0}idhost, {2}sysDescr, {3}sysUpTime, {4}sysContact, {5}sysLocation, {6}sysServices, {7}data, {8}hora</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbmanager.reg_group2_db">
+<tt class="descclassname">dbmanager.</tt><tt class="descname">reg_group2_db</tt><big>(</big><em>db</em>, <em>hosts_list</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#reg_group2_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.reg_group2_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grava do Dados do Grupo 2 no Banco de Dados 
+db = Banco de Dados
+hosts_list = Lista com {0}idhost, {2}hrSystemUsers, {3}hrSystemProcess, {4}data, {5}hora</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbmanager.reg_group3_db">
+<tt class="descclassname">dbmanager.</tt><tt class="descname">reg_group3_db</tt><big>(</big><em>db</em>, <em>hosts_list</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#reg_group3_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.reg_group3_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grava do Dados do Grupo 3 no Banco de Dados 
+db = Banco de Dados
+hosts_list = Lista com {0}idhost, {2}Memory, {3}hrStorageDescr, {4}hrStorageSize, {5}hrStorageUsed, {6}data, {7}hora</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbmanager.reg_group6_db">
+<tt class="descclassname">dbmanager.</tt><tt class="descname">reg_group6_db</tt><big>(</big><em>db</em>, <em>hosts_list</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#reg_group6_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.reg_group6_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grava do Dados do Grupo 6 no Banco de Dados 
+db = Banco de Dados
+hosts_list = Lista com {0}idhost, {2}ipAdEntAddr, {3}ipAdEntifIndex, {4}ipAdEndNetMask</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbmanager.reg_hosts_db">
+<tt class="descclassname">dbmanager.</tt><tt class="descname">reg_hosts_db</tt><big>(</big><em>db</em>, <em>hosts_list</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#reg_hosts_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.reg_hosts_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grava no Banco de Dados na tabela Hosts 
+db: Banco de Dados
+hosts_list: Lista de tuplas com ips e nomes de host</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbmanager.reg_query_db">
+<tt class="descclassname">dbmanager.</tt><tt class="descname">reg_query_db</tt><big>(</big><em>db</em>, <em>hosts_list</em><big>)</big><a class="reference internal" href="_modules/dbmanager.html#reg_query_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbmanager.reg_query_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recebe uma lista e consulta a tabela de Hosts, verifica os hosts cadastrados e retorna os hosts que nao existem na tabela.
+db: Banco de Dados
+hosts_list: Lista de tupla contendo ips e nomes de hosts.</p>
+</dd></dl>
+
+<span class="target" id="module-dbquery"></span><dl class="function">
+<dt id="dbquery.hostlist_csv">
+<tt class="descclassname">dbquery.</tt><tt class="descname">hostlist_csv</tt><big>(</big><em>dest</em>, <em>nome</em>, <em>idx=''</em><big>)</big><a class="reference internal" href="_modules/dbquery.html#hostlist_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbquery.hostlist_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gera a lista de Hosts e exibe o resultado em arquivo separado por virgulas (CSV).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbquery.hostlist_txt">
+<tt class="descclassname">dbquery.</tt><tt class="descname">hostlist_txt</tt><big>(</big><em>idx=''</em><big>)</big><a class="reference internal" href="_modules/dbquery.html#hostlist_txt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbquery.hostlist_txt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gera a lista de Hosts e exibe o resultado em arquivo de texto.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbquery.ifs_csv">
+<tt class="descclassname">dbquery.</tt><tt class="descname">ifs_csv</tt><big>(</big><em>dest</em>, <em>nome</em>, <em>idx=''</em><big>)</big><a class="reference internal" href="_modules/dbquery.html#ifs_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbquery.ifs_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gera a lista das interfaces de rede dos Hosts cadastrados e exibe o resultado em arquivo separado por virgulas (CSV).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbquery.ifs_txt">
+<tt class="descclassname">dbquery.</tt><tt class="descname">ifs_txt</tt><big>(</big><em>idx=''</em><big>)</big><a class="reference internal" href="_modules/dbquery.html#ifs_txt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbquery.ifs_txt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gera a lista das interfaces de rede dos Hosts cadastrados e exibe o resultado em arquivo de texto.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbquery.memory_storage_csv">
+<tt class="descclassname">dbquery.</tt><tt class="descname">memory_storage_csv</tt><big>(</big><em>dest</em>, <em>nome</em>, <em>idx=''</em><big>)</big><a class="reference internal" href="_modules/dbquery.html#memory_storage_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbquery.memory_storage_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gera a lista com a Memoria e unidades de armazenamento cadastrados no Host com seu tamanho total e usado e exibe o resultado em arquivo separado por virgulas (CSV).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbquery.memory_storage_txt">
+<tt class="descclassname">dbquery.</tt><tt class="descname">memory_storage_txt</tt><big>(</big><em>idx=''</em><big>)</big><a class="reference internal" href="_modules/dbquery.html#memory_storage_txt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbquery.memory_storage_txt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gera a lista com a Memoria e unidades de armazenamento cadastrados no Host com seu tamanho total e usado e exibe o resultado em arquivo de texto.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbquery.sysusers_process_csv">
+<tt class="descclassname">dbquery.</tt><tt class="descname">sysusers_process_csv</tt><big>(</big><em>dest</em>, <em>nome</em>, <em>idx=''</em><big>)</big><a class="reference internal" href="_modules/dbquery.html#sysusers_process_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbquery.sysusers_process_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gera a lista da quantidade de usuarios logados e quantidade de processos do Host ordenado por data e hora e exibe o resultado em arquivo separado por virgulas (CSV).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbquery.sysusers_process_txt">
+<tt class="descclassname">dbquery.</tt><tt class="descname">sysusers_process_txt</tt><big>(</big><em>idx=''</em><big>)</big><a class="reference internal" href="_modules/dbquery.html#sysusers_process_txt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbquery.sysusers_process_txt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gera a lista da quantidade de usuarios logados e quantidade de processos do Host ordenado por data e hora e exibe o resultado em arquivo de texto.</p>
+</dd></dl>
+
+<span class="target" id="module-logs"></span><dl class="function">
+<dt id="logs.logcollector">
+<tt class="descclassname">logs.</tt><tt class="descname">logcollector</tt><big>(</big><em>msg</em><big>)</big><a class="reference internal" href="_modules/logs.html#logcollector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#logs.logcollector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registra o log do collector
+msg = mensagem do log</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="logs.logdbmanager">
+<tt class="descclassname">logs.</tt><tt class="descname">logdbmanager</tt><big>(</big><em>msg</em><big>)</big><a class="reference internal" href="_modules/logs.html#logdbmanager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#logs.logdbmanager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registra o log do dbmanager
+msg = mensagem do log</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="logs.logdbquery">
+<tt class="descclassname">logs.</tt><tt class="descname">logdbquery</tt><big>(</big><em>msg</em><big>)</big><a class="reference internal" href="_modules/logs.html#logdbquery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#logs.logdbquery" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registra o log do dbquery
+msg = mensagem do log</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="logs.logipscanner">
+<tt class="descclassname">logs.</tt><tt class="descname">logipscanner</tt><big>(</big><em>l</em>, <em>tp</em><big>)</big><a class="reference internal" href="_modules/logs.html#logipscanner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#logs.logipscanner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registra o log do ipscanner.
+l = Lista dos IPs
+tp = tipo de log</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="logs.logsnmpget">
+<tt class="descclassname">logs.</tt><tt class="descname">logsnmpget</tt><big>(</big><em>msg</em><big>)</big><a class="reference internal" href="_modules/logs.html#logsnmpget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#logs.logsnmpget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registra o log do snmpget
+msg = mensagem do log</p>
+</dd></dl>
+
+<span class="target" id="module-manager"></span><dl class="function">
+<dt id="manager.opt1">
+<tt class="descclassname">manager.</tt><tt class="descname">opt1</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/manager.html#opt1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#manager.opt1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cadastro manual de Hosts.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="manager.opt2">
+<tt class="descclassname">manager.</tt><tt class="descname">opt2</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/manager.html#opt2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#manager.opt2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inicia o scanner de IPs que verifica a disponibilidade do servico SNMP e fornece a opcao de cadastra-los</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="manager.opt3">
+<tt class="descclassname">manager.</tt><tt class="descname">opt3</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/manager.html#opt3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#manager.opt3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alteracao manual de Hosts.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="manager.opt4">
+<tt class="descclassname">manager.</tt><tt class="descname">opt4</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/manager.html#opt4"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#manager.opt4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Realiza a Exclusao de Hosts</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="manager.opt5">
+<tt class="descclassname">manager.</tt><tt class="descname">opt5</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/manager.html#opt5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#manager.opt5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exibe o menu de Consultas</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="manager.opt6">
+<tt class="descclassname">manager.</tt><tt class="descname">opt6</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/manager.html#opt6"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#manager.opt6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executa o agendamento do collector, que ira coletar informacoes de gerenciamento dos hosts cadastrados.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="manager.opt7">
+<tt class="descclassname">manager.</tt><tt class="descname">opt7</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/manager.html#opt7"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#manager.opt7" title="Permalink to this definition">¶</a></dt>
+<dd><p>Faz uma chamada no coletor manual de informacoes que ira coletar as informacoes dos Hosts cadastrados.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="manager.opt8">
+<tt class="descclassname">manager.</tt><tt class="descname">opt8</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/manager.html#opt8"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#manager.opt8" title="Permalink to this definition">¶</a></dt>
+<dd><p>Realiza o backup do Banco de Dados</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="manager.opt9">
+<tt class="descclassname">manager.</tt><tt class="descname">opt9</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/manager.html#opt9"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#manager.opt9" title="Permalink to this definition">¶</a></dt>
+<dd><p>Realiza a limpeza do Banco de Dados
+E feito um drop de todas as tabelas de depois um create novamente</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="manager.options">
+<tt class="descclassname">manager.</tt><tt class="descname">options</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/manager.html#options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#manager.options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Desenha o menu de opcoes</p>
+</dd></dl>
+
+<span class="target" id="module-settings"></span></div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="coleta.html"
+                        title="previous chapter">Grupos Coletados</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="notas.html"
+                        title="next chapter">Notas do Autor</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/codigo.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="notas.html" title="Notas do Autor"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="coleta.html" title="Grupos Coletados"
+             >previous</a> |</li>
+        <li><a href="index.html">Gerenciador SNMP 0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Fabricio Kelmer.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

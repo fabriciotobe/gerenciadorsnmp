@@ -1,0 +1,21 @@
+Documentacao dos Modulos e Codigo Fonte
+=======================================
+
+.. automodule:: collector
+   :members:
+
+.. automodule:: dbmanager
+   :members:
+
+.. automodule:: dbquery
+   :members:
+
+.. automodule:: logs
+   :members:
+
+.. automodule:: manager
+   :members:
+
+.. automodule:: settings
+   :members:
+

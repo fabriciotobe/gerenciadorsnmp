@@ -1,0 +1,57 @@
+Instalacao
+==========
+
+Gerenciador
+-----------
+	
+	Para gerenciar o programa e o banco de dados e necessario utilizar o Linux e seguir os seguintes passos para instalacao.
+1. Configurar o INTALL_PATH no arquivo `settings.py`
+2. Instalar o pysnmp (pip install pysnmp)
+3. Instalar o snmpd (no Ubuntu: apt-get install snmpd)
+4. Abrir o arquivo `snmpd.conf` no diretorio de instalacao e alterar syslocation (Local) e syscontact (Contato).
+5. Copiar o arquivo `snmpd.conf` do diretorio de instalacao para /etc/snmp/snmpd.conf. Fazer backup do original.
+6. Reiniciar o snmpd (service snmpd restart)
+7. Executar no `manager.py` e executar a opcao 8 - limpar banco de dados
+8. Agendar o coletor na opcao 5 - agendar a coleta de informacoes
+	
+Cliente Linux
+-------------
+
+1. Instalar o snmpd
+2. Copiar o arquivo de configuracao snmpd.conf pre configurado do diretorio padrao do Gerenciador para o cliente.
+3. Reiniciar o snmpd
+	
+Cliente Windows XP/2003
+-----------------------
+
+1. Iniciar
+2. Painel de Controle
+3. Adicionar e remover programas
+4. Na lateral esquerda, adicionar/remover componentes do windows
+5. Abrir Ferramentas de gerenciamento e monitoramento
+6. Marcar Simple Network Management Protocol
+7. Clicar Ok e depois Avancar, aguardar e depois concluir
+8. Acessar o gerenciador de servicos (services.msc)
+9. Abrir o servico Servico SNMP
+10. Na guia Agente, adicionar informacoes de contato e local e selecionar todos os servicos
+11. Na guia Intercalacoes, inserir a comunidade public
+12. Na guia Seguranca, adicionar em Nome de comunidades aceitas a comunidade public (somente leitura)
+13. Na guia Seguranca, definir se ira aceita pacotes SNMP de qualquer host ou definir o IP do host gerenciador
+14. Aplicar as configuracoes e reniciar o servico.
+	
+Cliente Windows Vista/7
+-----------------------
+
+1. Iniciar
+2. Painel de Controle
+3. Programas e Recursos
+4. Ativar ou desativar recursos do Windows
+5. Marcar Protocolo SNMP
+6. Clicar Ok.
+7. Acessar o gerenciador de servicos (services.msc)
+8. Abrir o servico Servico SNMP
+9. Na guia Agente, adicionar informacoes de contato e local e selecionar todos os servicos
+10. Na guia Intercalacoes, inserir a comunidade public
+11. Na guia Seguranca, adicionar em Nome de comunidades aceitas a comunidade public (somente leitura)
+12. Na guia Seguranca, definir se ira aceita pacotes SNMP de qualquer host ou definir o IP do host gerenciador
+13. Aplicar as configuracoes e reniciar o servico.

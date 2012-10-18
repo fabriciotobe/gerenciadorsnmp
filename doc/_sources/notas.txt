@@ -1,0 +1,14 @@
+Notas do Autor
+==============
+
+Sugestao de Melhorias
+---------------------
+
+	Este programa foi desenvolvido como trabalho final para o curso Python para Administradores de Redes Linux pelo Instituto Federal - Sudeste de Minas Gerais - Campus Barbacena.
+	
+	O programa foi desenvolvido utilizando apenas parte do potencial do protocolo SNMP, existe a possibilidade de expandir as informacoes obtidas com o protocolo. Dentro do programa snmpget.py estao disponiveis funcoes que buscam informacoes dos processos que estao rodando, consumo de cpu de cada processo e consumo de memoria de cada processo. Fica como melhoria para o programa, habilitar estas informacoes e configurar a inclusao e manipulacao delas.
+
+Sobre o Autor
+-------------
+
+	Fabricio e formado em Ciencias da Computacao pela Universidade Presidente Antonio Carlos, trabalha como Analista de Suporte ha 10 anos. E profissional certificado ITIL na versao 3 e MCP 2003 Server.

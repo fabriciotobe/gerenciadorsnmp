@@ -1,0 +1,385 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>manager &mdash; Gerenciador SNMP 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Gerenciador SNMP 0.0.1 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Gerenciador SNMP 0.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for manager</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+<span class="c">#coding: utf-8</span>
+
+<span class="c"># AUTOR: Fabricio Kelmer</span>
+<span class="c"># CONTATO: fabriciotobe@gmail.com</span>
+<span class="c"># DATA: 16 de Outubro de 2012</span>
+
+<span class="c"># Arquivo que exibe um menu de tarefas, executa tarefas simples e convoca programas externos.</span>
+
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">tarfile</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">settings</span> <span class="kn">import</span> <span class="n">DB</span><span class="p">,</span> <span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span>
+<span class="kn">import</span> <span class="nn">dbmanager</span>
+<span class="kn">import</span> <span class="nn">collector</span>
+<span class="kn">import</span> <span class="nn">dbquery</span>
+
+<div class="viewcode-block" id="opt1"><a class="viewcode-back" href="../codigo.html#manager.opt1">[docs]</a><span class="k">def</span> <span class="nf">opt1</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39; Cadastro manual de Hosts. &#39;&#39;&#39;</span>
+    <span class="n">sair</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s">&#39;clear&#39;</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">sair</span><span class="p">:</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">ip</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Endereco IP: &#39;</span><span class="p">)</span>
+        <span class="n">host</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Nome do Host: &#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">ip</span> <span class="o">!=</span> <span class="s">&#39;&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">host</span> <span class="o">!=</span> <span class="s">&#39;&#39;</span><span class="p">):</span>
+            <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ip</span><span class="p">,</span> <span class="n">host</span><span class="p">))</span>
+            <span class="n">laux</span> <span class="o">=</span> <span class="n">dbmanager</span><span class="o">.</span><span class="n">reg_query_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">),</span> <span class="n">l</span><span class="p">)</span>
+            <span class="n">dbmanager</span><span class="o">.</span><span class="n">reg_hosts_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">),</span> <span class="n">laux</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">&#39;IP ou Host vazio nao sao validos&#39;</span>
+        <span class="k">print</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">0) Sair&#39;</span>
+        <span class="k">print</span> <span class="s">&#39;1) Continuar cadastrando&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sair</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s">&#39;Escolher: &#39;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="s">&#39;Opcao invalida!&#39;</span>
+            <span class="n">sair</span> <span class="o">=</span> <span class="mi">0</span>
+</div>
+<div class="viewcode-block" id="opt2"><a class="viewcode-back" href="../codigo.html#manager.opt2">[docs]</a><span class="k">def</span> <span class="nf">opt2</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39; Inicia o scanner de IPs que verifica a disponibilidade do servico SNMP e fornece a opcao de cadastra-los &#39;&#39;&#39;</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s">&#39;clear&#39;</span><span class="p">)</span>
+    <span class="n">ip_ini</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Endereco IP inicial: &#39;</span><span class="p">)</span>
+    <span class="n">ip_fin</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Encereco IP final: &#39;</span><span class="p">)</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s">&#39;./ipscanner.py&#39;</span><span class="p">,</span> <span class="n">ip_ini</span><span class="p">,</span> <span class="n">ip_fin</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="opt3"><a class="viewcode-back" href="../codigo.html#manager.opt3">[docs]</a><span class="k">def</span> <span class="nf">opt3</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39; Alteracao manual de Hosts. &#39;&#39;&#39;</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s">&#39;clear&#39;</span><span class="p">)</span>
+    <span class="n">sair</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">sair</span><span class="p">:</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">ip</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Endereco IP: &#39;</span><span class="p">)</span>
+        <span class="n">host</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Nome do Host: &#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">ip</span> <span class="o">!=</span> <span class="s">&#39;&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">host</span> <span class="o">!=</span> <span class="s">&#39;&#39;</span><span class="p">):</span>
+            <span class="n">dbmanager</span><span class="o">.</span><span class="n">alter_host_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">),</span> <span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">host</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">&#39;IP ou Host vazio nao sao validos&#39;</span>
+        <span class="k">print</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">0) Sair&#39;</span>
+        <span class="k">print</span> <span class="s">&#39;1) Continuar alterando&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sair</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s">&#39;Escolher: &#39;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="s">&#39;Opcao invalida!&#39;</span>
+            <span class="n">sair</span> <span class="o">=</span> <span class="mi">0</span>
+</div>
+<div class="viewcode-block" id="opt4"><a class="viewcode-back" href="../codigo.html#manager.opt4">[docs]</a><span class="k">def</span> <span class="nf">opt4</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39; Realiza a Exclusao de Hosts &#39;&#39;&#39;</span>
+    <span class="n">sair</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s">&#39;clear&#39;</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">sair</span><span class="p">:</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">ip</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Endereco IP: &#39;</span><span class="p">)</span>
+        <span class="n">host</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Nome do Host: &#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">ip</span> <span class="o">!=</span> <span class="s">&#39;&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">host</span> <span class="o">!=</span> <span class="s">&#39;&#39;</span><span class="p">):</span>
+            <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ip</span><span class="p">,</span> <span class="n">host</span><span class="p">))</span>
+            <span class="n">dbmanager</span><span class="o">.</span><span class="n">del_hosts_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">),</span> <span class="n">l</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">&#39;IP ou Host vazio nao sao validos&#39;</span>
+        <span class="k">print</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">0) Sair&#39;</span>
+        <span class="k">print</span> <span class="s">&#39;1) Continuar excluindo&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sair</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s">&#39;Escolher: &#39;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="s">&#39;Opcao invalida!&#39;</span>
+            <span class="n">sair</span> <span class="o">=</span> <span class="mi">0</span>
+</div>
+<div class="viewcode-block" id="opt5"><a class="viewcode-back" href="../codigo.html#manager.opt5">[docs]</a><span class="k">def</span> <span class="nf">opt5</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39; Exibe o menu de Consultas &#39;&#39;&#39;</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s">&#39;clear&#39;</span><span class="p">)</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">CONSULTAS</span><span class="se">\n</span><span class="s">0) Listas simples de Hosts</span><span class="se">\n</span><span class="s">1) Hosts</span><span class="se">\n</span><span class="s">2) Gerencial de usuarios e processos</span><span class="se">\n</span><span class="s">3) Memoria e Armazenamento</span><span class="se">\n</span><span class="s">4) Interfaces de Rede</span><span class="se">\n</span><span class="s">5) Voltar&#39;</span>
+        <span class="n">op</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Escolher: &#39;</span><span class="p">)</span>
+        <span class="k">print</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span>
+        
+        <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#39;0&#39;</span><span class="p">:</span> <span class="c"># Lista simples de Hosts</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s">&#39;clear&#39;</span><span class="p">)</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s">&#39;./dbmanager.py&#39;</span><span class="p">)</span>
+            
+        <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#39;1&#39;</span><span class="p">:</span> <span class="c"># Hosts </span>
+            <span class="n">tipo</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Tipo de arquivo de saida: CSV ou TXT</span><span class="se">\n</span><span class="s">Digite c para CSV ou t para TXT: &#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">tipo</span> <span class="o">==</span> <span class="s">&#39;c&#39;</span><span class="p">:</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Digite ID do Host ou ENTER para todos: &#39;</span><span class="p">)</span>
+                <span class="n">dest</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Digite o destino do arquivo CSV ou ENTER para padrao: &#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">dest</span> <span class="o">==</span> <span class="s">&#39;&#39;</span><span class="p">:</span> <span class="n">dest</span> <span class="o">=</span> <span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">)</span>
+                <span class="n">nome</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Digite o nome do arquivo CSV ou ENTER para padrao : &#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">nome</span> <span class="o">==</span> <span class="s">&#39;&#39;</span><span class="p">:</span> <span class="n">nome</span> <span class="o">=</span> <span class="s">&#39;hostslists&#39;</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dest</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">dest</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s">&#39;/&#39;</span><span class="p">:</span> <span class="n">dest</span> <span class="o">=</span> <span class="n">dest</span> <span class="o">+</span> <span class="s">&#39;/&#39;</span>
+                <span class="n">dbquery</span><span class="o">.</span><span class="n">hostlist_csv</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">tipo</span> <span class="o">==</span> <span class="s">&#39;t&#39;</span><span class="p">:</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Digite ID do Host ou ENTER para todos: &#39;</span><span class="p">)</span>
+                <span class="n">dbquery</span><span class="o">.</span><span class="n">hostlist_txt</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s">&#39;Tipo inexistente. Digite c ou t como tipo de arquivo de saida&#39;</span>
+                
+        <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#39;2&#39;</span><span class="p">:</span> <span class="c"># Gerencial de usuarios e processos</span>
+            <span class="n">tipo</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Tipo de arquivo de saida: CSV ou TXT</span><span class="se">\n</span><span class="s">Digite c para CSV ou t para TXT: &#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">tipo</span> <span class="o">==</span> <span class="s">&#39;c&#39;</span><span class="p">:</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Digite ID do Host ou ENTER para todos: &#39;</span><span class="p">)</span>
+                <span class="n">dest</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Digite o destino do arquivo CSV ou ENTER para padrao: &#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">dest</span> <span class="o">==</span> <span class="s">&#39;&#39;</span><span class="p">:</span> <span class="n">dest</span> <span class="o">=</span> <span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">)</span>
+                <span class="n">nome</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Digite o nome do arquivo CSV ou ENTER para padrao : &#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">nome</span> <span class="o">==</span> <span class="s">&#39;&#39;</span><span class="p">:</span> <span class="n">nome</span> <span class="o">=</span> <span class="s">&#39;sysusers_process&#39;</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dest</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">dest</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s">&#39;/&#39;</span><span class="p">:</span> <span class="n">dest</span> <span class="o">=</span> <span class="n">dest</span> <span class="o">+</span> <span class="s">&#39;/&#39;</span>
+                <span class="n">dbquery</span><span class="o">.</span><span class="n">sysusers_process_csv</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">tipo</span> <span class="o">==</span> <span class="s">&#39;t&#39;</span><span class="p">:</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Digite ID do Host ou ENTER para todos: &#39;</span><span class="p">)</span>
+                <span class="n">dbquery</span><span class="o">.</span><span class="n">sysusers_process_txt</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s">&#39;Tipo inexistente. Digite c ou t como tipo de arquivo de saida&#39;</span>
+                
+        <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#39;3&#39;</span><span class="p">:</span>
+            <span class="n">tipo</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Tipo de arquivo de saida: CSV ou TXT</span><span class="se">\n</span><span class="s">Digite c para CSV ou t para TXT: &#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">tipo</span> <span class="o">==</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="c"># Memoria e Armazenamento</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Digite ID do Host ou ENTER para todos: &#39;</span><span class="p">)</span>
+                <span class="n">dest</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Digite o destino do arquivo CSV ou ENTER para padrao: &#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">dest</span> <span class="o">==</span> <span class="s">&#39;&#39;</span><span class="p">:</span> <span class="n">dest</span> <span class="o">=</span> <span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">)</span>
+                <span class="n">nome</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Digite o nome do arquivo CSV ou ENTER para padrao : &#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">nome</span> <span class="o">==</span> <span class="s">&#39;&#39;</span><span class="p">:</span> <span class="n">nome</span> <span class="o">=</span> <span class="s">&#39;memory_storage&#39;</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dest</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">dest</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s">&#39;/&#39;</span><span class="p">:</span> <span class="n">dest</span> <span class="o">=</span> <span class="n">dest</span> <span class="o">+</span> <span class="s">&#39;/&#39;</span>
+                <span class="n">dbquery</span><span class="o">.</span><span class="n">memory_storage_csv</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">tipo</span> <span class="o">==</span> <span class="s">&#39;t&#39;</span><span class="p">:</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Digite ID do Host ou ENTER para todos: &#39;</span><span class="p">)</span>
+                <span class="n">dbquery</span><span class="o">.</span><span class="n">memory_storage_txt</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s">&#39;Tipo inexistente. Digite c ou t como tipo de arquivo de saida&#39;</span>
+                
+        <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#39;4&#39;</span><span class="p">:</span> <span class="c"># Interfaces de rede</span>
+            <span class="n">tipo</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Tipo de arquivo de saida: CSV ou TXT</span><span class="se">\n</span><span class="s">Digite c para CSV ou t para TXT: &#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">tipo</span> <span class="o">==</span> <span class="s">&#39;c&#39;</span><span class="p">:</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Digite ID do Host ou ENTER para todos: &#39;</span><span class="p">)</span>
+                <span class="n">dest</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Digite o destino do arquivo CSV ou ENTER para padrao: &#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">dest</span> <span class="o">==</span> <span class="s">&#39;&#39;</span><span class="p">:</span> <span class="n">dest</span> <span class="o">=</span> <span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">)</span>
+                <span class="n">nome</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Digite o nome do arquivo CSV ou ENTER para padrao : &#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">nome</span> <span class="o">==</span> <span class="s">&#39;&#39;</span><span class="p">:</span> <span class="n">nome</span> <span class="o">=</span> <span class="s">&#39;ifs&#39;</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dest</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">dest</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s">&#39;/&#39;</span><span class="p">:</span> <span class="n">dest</span> <span class="o">=</span> <span class="n">dest</span> <span class="o">+</span> <span class="s">&#39;/&#39;</span>
+                <span class="n">dbquery</span><span class="o">.</span><span class="n">ifs_csv</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">nome</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">tipo</span> <span class="o">==</span> <span class="s">&#39;t&#39;</span><span class="p">:</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Digite ID do Host ou ENTER para todos: &#39;</span><span class="p">)</span>
+                <span class="n">dbquery</span><span class="o">.</span><span class="n">ifs_txt</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s">&#39;Tipo inexistente. Digite c ou t como tipo de arquivo de saida&#39;</span>
+                
+        <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#39;5&#39;</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s">&#39;clear&#39;</span><span class="p">)</span>
+            <span class="k">print</span> <span class="s">&#39;Opcao inexistente. Escolha uma opcao de 0 a 5&#39;</span>
+</div>
+<div class="viewcode-block" id="opt6"><a class="viewcode-back" href="../codigo.html#manager.opt6">[docs]</a><span class="k">def</span> <span class="nf">opt6</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39; Executa o agendamento do collector, que ira coletar informacoes de gerenciamento dos hosts cadastrados. &#39;&#39;&#39;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Este processo podera solicitar a senha do root para alterar o arquivo de agendamento (/etc/crontab)</span><span class="se">\n</span><span class="s">Deseja continuar? s para sim ou n para nao: &#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#39;s&#39;</span><span class="p">:</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">op2</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Deseja alterar ou remover agendamento? a para alterar ou r para remover: &#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">op2</span> <span class="o">==</span> <span class="s">&#39;a&#39;</span><span class="p">:</span>
+                <span class="n">t</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Informar em minutos (1 a 59) a frequencia da coletar de informacoes:  &#39;</span><span class="p">)</span>
+                <span class="k">break</span>
+            <span class="k">elif</span> <span class="n">op2</span> <span class="o">==</span> <span class="s">&#39;r&#39;</span><span class="p">:</span>
+                <span class="n">t</span> <span class="o">=</span> <span class="s">&#39;1&#39;</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s">&#39;Escolha a ou r&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">60</span><span class="p">):</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">content_aux</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s">&#39;sudo&#39;</span><span class="p">,</span> <span class="s">&#39;cp&#39;</span><span class="p">,</span> <span class="s">&#39;/etc/crontab&#39;</span><span class="p">,</span> <span class="s">&#39;{0}{1}crontab.bak&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">)])</span>
+                <span class="n">u</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="s">&#39;whoami&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+                <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s">&#39;sudo&#39;</span><span class="p">,</span> <span class="s">&#39;chown&#39;</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="s">&#39;{0}{1}/crontab.bak&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">)])</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;{0}{1}crontab.bak&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">),</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">arq</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">arq</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+                        <span class="n">content</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s">&#39;sudo&#39;</span><span class="p">,</span> <span class="s">&#39;chown&#39;</span><span class="p">,</span> <span class="s">&#39;root&#39;</span><span class="p">,</span> <span class="s">&#39;{0}{1}crontab.bak&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">)])</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
+                    <span class="n">c</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;collector.py&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">c</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">op2</span> <span class="o">==</span> <span class="s">&#39;a&#39;</span><span class="p">:</span>
+                            <span class="n">content_aux</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;*/{0} * * * * root {1}collector.py</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">INSTALL_PATH</span><span class="p">))</span>
+                        <span class="k">elif</span> <span class="n">op2</span> <span class="o">==</span> <span class="s">&#39;r&#39;</span><span class="p">:</span>
+                            <span class="k">pass</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">content_aux</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">op2</span> <span class="o">==</span> <span class="s">&#39;a&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">y</span><span class="p">):</span>
+                    <span class="n">content_aux</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;*/{0} * * * * root {1}collector.py</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">INSTALL_PATH</span><span class="p">))</span>
+                    <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;{0}{1}crontab&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">),</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">arq</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">content_aux</span><span class="p">:</span>
+                        <span class="n">arq</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s">&#39;sudo&#39;</span><span class="p">,</span> <span class="s">&#39;cp&#39;</span><span class="p">,</span> <span class="s">&#39;{0}{1}crontab&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">TEMP_FOLDER</span><span class="p">),</span> <span class="s">&#39;/etc/crontab&#39;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s">&#39;Forneca um valor entre 1 e 59.&#39;</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">&#39;Erro! Fornecer um valor numerico.&#39;</span>
+    <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#39;n&#39;</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="s">&#39;Escolha sim ou nao, operacao abortada.&#39;</span>
+    </div>
+<div class="viewcode-block" id="opt7"><a class="viewcode-back" href="../codigo.html#manager.opt7">[docs]</a><span class="k">def</span> <span class="nf">opt7</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39; Faz uma chamada no coletor manual de informacoes que ira coletar as informacoes dos Hosts cadastrados. &#39;&#39;&#39;</span>
+    <span class="k">print</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s">&#39;./collector.py&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="opt8"><a class="viewcode-back" href="../codigo.html#manager.opt8">[docs]</a><span class="k">def</span> <span class="nf">opt8</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39; Realiza o backup do Banco de Dados &#39;&#39;&#39;</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s">&#39;clear&#39;</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Nome do arquivo de Backup: &#39;</span><span class="p">)</span>
+    <span class="n">dest</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Salvar em: &#39;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dest</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s">&#39;/&#39;</span><span class="p">:</span> <span class="n">dest</span> <span class="o">=</span> <span class="n">dest</span> <span class="o">+</span> <span class="s">&#39;/&#39;</span>
+        <span class="n">bckfile</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">dest</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="s">&#39;-&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">-%m-%Y-%H-%M-%S&#39;</span><span class="p">),</span> <span class="s">&#39;.tar&#39;</span><span class="p">])</span>
+        <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">bckfile</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">tf</span><span class="p">:</span>
+            <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">),</span> <span class="n">DB</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">print</span> <span class="s">&#39;Backup realizado com sucesso.</span><span class="se">\n</span><span class="s">{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bckfile</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&#39;Falha ao gerar arquivo de backup.&#39;</span>
+</div>
+<div class="viewcode-block" id="opt9"><a class="viewcode-back" href="../codigo.html#manager.opt9">[docs]</a><span class="k">def</span> <span class="nf">opt9</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39; Realiza a limpeza do Banco de Dados</span>
+<span class="sd">        E feito um drop de todas as tabelas de depois um create novamente &#39;&#39;&#39;</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s">&#39;clear&#39;</span><span class="p">)</span>
+        <span class="n">op</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Deseja realmente apagar todos os dados?</span><span class="se">\n</span><span class="s">Digite s para Sim e n para Nao. &#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#39;s&#39;</span><span class="p">:</span>
+            <span class="n">dbmanager</span><span class="o">.</span><span class="n">drop_tables_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">))</span>
+            <span class="n">dbmanager</span><span class="o">.</span><span class="n">create_tables_db</span><span class="p">(</span><span class="s">&#39;{0}{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">INSTALL_PATH</span><span class="p">,</span> <span class="n">DB</span><span class="p">))</span>
+            <span class="k">break</span>
+        <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#39;n&#39;</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">&#39;Operacao cancelada.&#39;</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">&#39;Digite s ou n.&#39;</span>
+</div>
+<div class="viewcode-block" id="options"><a class="viewcode-back" href="../codigo.html#manager.options">[docs]</a><span class="k">def</span> <span class="nf">options</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39; Desenha o menu de opcoes &#39;&#39;&#39;</span>
+    <span class="k">print</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">------------------------------------------------------------</span><span class="se">\n</span><span class="s">1) Cadastro manual de Hosts</span><span class="se">\n</span><span class="s">2) Escanear range de IP</span><span class="se">\n</span><span class="s">3) Alterar cadastros de Hosts</span><span class="se">\n</span><span class="s">4) Excluir host cadastrado</span><span class="se">\n</span><span class="s">5) Consultar informacoes</span><span class="se">\n</span><span class="s">6) Agendar a coleta de informacoes</span><span class="se">\n</span><span class="s">7) Coletar manual de informacoes</span><span class="se">\n</span><span class="s">8) Backup da Base de Dados</span><span class="se">\n</span><span class="s">9) Limpar a Base de Dados</span><span class="se">\n</span><span class="s">s) Sair&#39;</span>    
+    <span class="k">return</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Escolher: &#39;</span><span class="p">)</span>
+</div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s">&#39;clear&#39;</span><span class="p">)</span>
+    <span class="n">sair</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">sair</span><span class="p">:</span>
+        <span class="n">op</span> <span class="o">=</span> <span class="n">options</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#39;1&#39;</span><span class="p">:</span> <span class="c"># Cadastro Manual de Hosts</span>
+            <span class="n">opt1</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#39;2&#39;</span><span class="p">:</span> <span class="c"># Escanear range de IP</span>
+            <span class="n">opt2</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#39;3&#39;</span><span class="p">:</span> <span class="c"># Alterar cadastros de Hosts</span>
+            <span class="n">opt3</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#39;4&#39;</span><span class="p">:</span> <span class="c"># Excluir hosts cadastrados</span>
+            <span class="n">opt4</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#39;5&#39;</span><span class="p">:</span> <span class="c"># Consultar Informacoes</span>
+            <span class="n">opt5</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#39;6&#39;</span><span class="p">:</span> <span class="c"># Agendar coletar de informacoes</span>
+            <span class="n">opt6</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#39;7&#39;</span><span class="p">:</span> <span class="c"># Coleta manual de informacoes</span>
+            <span class="n">opt7</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#39;8&#39;</span><span class="p">:</span> <span class="c"># Backup da Base de Dados</span>
+            <span class="n">opt8</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#39;9&#39;</span><span class="p">:</span> <span class="c"># Limpar Base de Dados</span>
+            <span class="n">opt9</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#39;s&#39;</span><span class="p">:</span> <span class="c"># Sair</span>
+            <span class="n">sair</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">print</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Gerenciador SNMP 0.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Fabricio Kelmer.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

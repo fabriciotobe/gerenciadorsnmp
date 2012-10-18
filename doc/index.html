@@ -1,0 +1,180 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Documentacao do Gerenciador SNMP &mdash; Gerenciador SNMP 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Gerenciador SNMP 0.0.1 documentation" href="#" />
+    <link rel="next" title="Instalacao" href="install.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Instalacao"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">Gerenciador SNMP 0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="documentacao-do-gerenciador-snmp">
+<h1>Documentacao do Gerenciador SNMP<a class="headerlink" href="#documentacao-do-gerenciador-snmp" title="Permalink to this headline">¶</a></h1>
+<p>Programa de gerenciamento de informacoes atraves do protocolo SNMP</p>
+<p><strong>Autor:</strong> Fabricio Kelmer</p>
+<p><strong>Contato:</strong> <a class="reference external" href="mailto:fabriciotobe&#37;&#52;&#48;gmail&#46;com">fabriciotobe<span>&#64;</span>gmail<span>&#46;</span>com</a></p>
+<p><strong>Data:</strong> 15 de Outubro de 2012</p>
+<div class="section" id="introducao">
+<h2>Introducao<a class="headerlink" href="#introducao" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>O programa utiliza o protocolo SNMP para pegar informacoes em determinados intervalos de tempo de Hosts na rede. Estas informacoes sao armazenadas em um banco de dados utilizando sqlite. As seguintes informacoes sao registradas:</p>
+<ul class="simple">
+<li>IP</li>
+<li>Nome do Host</li>
+<li>Descricao</li>
+<li>Informacoes de contato</li>
+<li>Tempo na qual o sistema esta ligado</li>
+<li>Local de registro do sistema</li>
+<li>Servicos do sistema</li>
+<li>Numero de usuarios logados</li>
+<li>Numero de processos do sistema</li>
+<li>Memoria</li>
+<li>Unidades de armazenamento</li>
+<li>Tamanho total das unidades de armazenamento</li>
+<li>Escao usado das unidades de armazenamento</li>
+<li>Interfaces de rede</li>
+</ul>
+</div></blockquote>
+<p>Conteudo:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Instalacao</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#gerenciador">Gerenciador</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#cliente-linux">Cliente Linux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#cliente-windows-xp-2003">Cliente Windows XP/2003</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#cliente-windows-vista-7">Cliente Windows Vista/7</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="coleta.html">Grupos Coletados</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="coleta.html#grupo-1-system">Grupo 1: system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coleta.html#grupo-2-hrsystem">Grupo 2: hrSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coleta.html#grupo-3-hrstorage">Grupo 3: hrStorage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coleta.html#grupo-4-hrswrun">Grupo 4: hrSWRun</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coleta.html#grupo-5-hrswrunperf">Grupo 5: hrSWRunPerf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coleta.html#grupo-6-ip-ipaddrtable">Grupo 6: ip/ipAddrTable</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="codigo.html">Documentacao dos Modulos e Codigo Fonte</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notas.html">Notas do Autor</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notas.html#sugestao-de-melhorias">Sugestao de Melhorias</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notas.html#sobre-o-autor">Sobre o Autor</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Documentacao do Gerenciador SNMP</a><ul>
+<li><a class="reference internal" href="#introducao">Introducao</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="install.html"
+                        title="next chapter">Instalacao</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Instalacao"
+             >next</a> |</li>
+        <li><a href="#">Gerenciador SNMP 0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Fabricio Kelmer.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

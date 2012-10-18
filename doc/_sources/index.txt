@@ -1,0 +1,53 @@
+.. Gerenciador SNMP documentation master file, created by
+   sphinx-quickstart on Mon Oct 15 23:39:20 2012.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Documentacao do Gerenciador SNMP
+================================
+
+Programa de gerenciamento de informacoes atraves do protocolo SNMP
+
+**Autor:** Fabricio Kelmer
+
+**Contato:** fabriciotobe@gmail.com
+
+**Data:** 15 de Outubro de 2012
+
+Introducao
+----------
+
+	O programa utiliza o protocolo SNMP para pegar informacoes em determinados intervalos de tempo de Hosts na rede. Estas informacoes sao armazenadas em um banco de dados utilizando sqlite. As seguintes informacoes sao registradas:
+
+	- IP
+	- Nome do Host
+	- Descricao
+	- Informacoes de contato
+	- Tempo na qual o sistema esta ligado
+	- Local de registro do sistema
+	- Servicos do sistema
+	- Numero de usuarios logados
+	- Numero de processos do sistema
+	- Memoria
+	- Unidades de armazenamento
+	- Tamanho total das unidades de armazenamento
+	- Escao usado das unidades de armazenamento
+	- Interfaces de rede
+
+Conteudo:
+
+.. toctree::
+   :maxdepth: 2
+
+   install
+   coleta
+   codigo
+   notas
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+

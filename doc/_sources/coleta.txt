@@ -1,0 +1,70 @@
+Grupos Coletados
+================
+
+	As solicitacoes do `snmpget.py` foram separadas em grupos. Os seguintes grupos foram criados:
+
+Grupo 1: system
+---------------
+       - oid - nome do campo - utilizado - descricao
+       - 1.3.6.1.2.1.1.1 - sysDescr - descricao do sistema
+       - 1.3.6.1.2.1.1.2 - sysObjectID - nao esta sendo utilizado
+       - 1.3.6.1.2.1.1.3 - sysUpTime - tempo na qual o sistema esta ligado
+       - 1.3.6.1.2.1.1.4 - sysContact - contato do sistema
+       - 1.3.6.1.2.1.1.5 - sysName - nao esta sendo utilizado no Grupo 1, e adquirido no `ipscanner.py`
+       - 1.3.6.1.2.1.1.6 - sysLocation - local do sistema
+       - 1.3.6.1.2.1.1.7 - sysServices - servicos do sistema
+
+Grupo 2: hrSystem
+----------------- 
+      - oid - nome do campo - utilizado - descricao
+      - 1.3.6.1.2.1.25.1.1 - hrSystemUptime - nao esta sendo utilizado
+      - 1.3.6.1.2.1.25.1.2 - hrSystemDate - nao esta sendo utilizado
+      - 1.3.6.1.2.1.25.1.3 - hrSystemInitialLoadDevice - nao esta sendo utilizado
+      - 1.3.6.1.2.1.25.1.4 - hrSystemInitialLoadParameters - nao esta sendo utilizado
+      - 1.3.6.1.2.1.25.1.5 - hrSystemUsers - usuarios logados no sistema
+      - 1.3.6.1.2.1.25.1.6 - hrSystemProcess - processos em andamento no sistema
+      - 1.3.6.1.2.1.25.1.7 - hrSystemMaxProcess - nao esta sendo utilizado
+
+Grupo 3: hrStorage
+------------------
+      - oid - nome do campo - utilizado - descricao
+      - 1.3.6.1.2.1.25.2.2.0 - hrMemorySize - memoria
+      - 1.3.6.1.2.1.25.2.3.1.1 - hrStorageIndex - index da unidade de armazenamento
+      - 1.3.6.1.2.1.25.2.3.1.2 - hrStorageType - nao esta sendo utilizado
+      - 1.3.6.1.2.1.25.2.3.1.3 - hrStorageDescr - descricao da unidade de armazenamento
+      - 1.3.6.1.2.1.25.2.3.1.4 - hrStorageAlloc - nao esta sendo utilizado
+      - 1.3.6.1.2.1.25.2.3.1.5 - hrStorageSize - tamanho total da unidade de armazenamento
+      - 1.3.6.1.2.1.25.2.3.1.6 - hrStorageUsed - espaco utilizado da unidade de armazenamento
+      - 1.3.6.1.2.1.25.2.3.1.7 - hrStorageAllocationFailure - nao esta sendo utilizado
+
+Grupo 4: hrSWRun
+----------------
+
+	**Obs.:** Esta disponivel no codigo - mas nao esta sendo utilizado
+	
+       - oid - nome do campo - utilizado - descricao
+       - 1.3.6.1.2.1.25.4.2.1.1 - hrSWRunIndex - index do processo
+       - 1.3.6.1.2.1.25.4.2.1.2 - hrSWRunName - nome do processo
+       - 1.3.6.1.2.1.25.4.2.1.3 - hrSWRunID - id do processo
+       - 1.3.6.1.2.1.25.4.2.1.4 - hrSWRunPath - caminho do executavel/programa
+       - 1.3.6.1.2.1.25.4.2.1.5 - hrSWRunParameters - paramentros passado para o executavel/programa
+       - 1.3.6.1.2.1.25.4.2.1.6 - hrSWRunType - tipo do processo
+       - 1.3.6.1.2.1.25.4.2.1.7 - hrSWRunStauts - status (executando, parado, etc)
+
+Grupo 5: hrSWRunPerf
+--------------------
+
+ 	**Obs.:** Esta disponivel no codigo - mas nao esta sendo utilizado
+ 	
+       - oid - nome do campo - utilizado - descricao
+       - 1.3.6.1.2.1.25.5.1.1.1 - hrSWRunPerfCPU - Porcentagem do uso do processador
+       - 1.3.6.1.2.1.25.5.1.1.2 - hrSWRunPerfMem - Memoria usada em Kbytes
+
+Grupo 6: ip/ipAddrTable
+-----------------------
+       - oid - nome do campo - utilizado - descricao
+       - 1.3.6.1.2.1.4.20.1.1 - ipAdEntAddr - Ips
+       - 1.3.6.1.2.1.4.20.1.2 - ipAdEntifIndex - ID da interface
+       - 1.3.6.1.2.1.4.20.1.3 - ipAdEntNetMask - Submascara de rede
+       - 1.3.6.1.2.1.4.20.1.4 - ipAdEntBcastAddr - nao esta sendo utilizado
+       - 1.3.6.1.2.1.4.20.1.5 - ipAdEntReasmMaxSize - nao esta sendo utilizado
